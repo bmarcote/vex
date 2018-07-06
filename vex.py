@@ -1,5 +1,37 @@
 """
 Vex files parser
+The vex module is a parser for VEX files that is written completely in Python.
+It parses a VEX file into a Vex object, storing all the inputs as an (ordered)
+dictionary structure. This module does not validate the VEX file, in particular
+it does not check if the block names and parameter names are actually defined by
+the VEX standard (https://vlbi.org/vex).
+All parameters are stored as strings, without further evaluation.
+
+Usage
+-----
+
+import vex
+
+v = vex.Vex(vexfilename)
+
+
+Now you can go through all the sections of the VEX file as
+
+v['STATION']['Jb']...
+
+Note that all comments from the VEX file are kept,
+and will be shown as different entries named 'comment-##', where ## is the number
+of the comment line within the respective section/definition.
+
+
+Version: 1.1
+Date: Jul 2018
+Written by Benito Marcote (marcote@jive.eu)
+
+
+version 1.1 changes
+- Bug fixes (in Section.__repr__). Fixed by Jay Blanchard
+
 """
 
 import os
@@ -41,9 +73,9 @@ class Entry:
     def __init__(self, type_entry, key, value):
         # self._type = None
         self.type = type_entry
-        # self._key = None
         self.key = key
         self.value = value
+        self.__name__ = 'Entry'
 
 
     @property
@@ -72,7 +104,7 @@ class Entry:
         
         self._key = a_key
 
-    
+
     def entry_from_text(text):
         """Interprets a string line (such as a line in the vex file) and saves it as an Entry
         object
@@ -83,15 +115,19 @@ class Entry:
         
         assert text.count('=') >= 1
         key, *value = [i for i in text.split('=')]
-        # key = key.strip()
+        key = key.strip()
         if type(value) is list:
             # In the case of >1 everything after the first = will be placed as the value (str)
             value = '='.join(value)
 
+        value = value.strip()
+        if value[-1] == ';':
+            value = value[:-1]
+
         if 'ref ' in key:
             # This is a variable definition
             assert key.count('$') == 1
-            key = key.split('$')[1]#.strip()
+            key = key.split('$')[1].strip()
             text_entry = EntryType.variable
         else:
             # Should not be spaces in the key
@@ -116,6 +152,9 @@ class Entry:
             raise KeyError(f'{key} not found')
     
 
+    def __setitem__(self, value):
+        self.value = value
+
     def __setitem__(self, key, value):
         if self.key == key:
             self.value = value
@@ -137,21 +176,21 @@ class Entry:
             return f'*{self.value}\n'
         elif self.type is EntryType.variable:
             if type(self.value) is list:
-                return s + f"ref ${self.key}={':'.join(self.value)}\n"
+                return s + f"ref ${self.key} = {':'.join(self.value)};\n"
             else:
-                return s + f"ref ${self.key}={self.value}\n"
+                return s + f"ref ${self.key} = {self.value};\n"
         elif self.type is EntryType.parameter:
             if type(self.value) is list:
-                return s + f"{self.key}={':'.join(self.value)}\n"
+                return s + f"{self.key} = {':'.join(self.value)};\n"
             else:
-                return s + f"{self.key}={self.value}\n"
+                return s + f"{self.key} = {self.value};\n"
         else:
             # Just as control. To make sure noone updated wrongly this code.
             raise ValueError('The EntryType is inconsistent with the __str__ representations of Entry')
 
     
     def __repr__(self):
-        return f'<{self.__module__}.{self.__name__} ({self.key} = {self.value}), {hex(id(self))}>'
+        return f'<{self.__module__}.{self.__name__} at {hex(id(self))}>'
 
 
 class Definition(OrderedDict):
@@ -314,6 +353,7 @@ class Section:
             self._definitions = OrderedDict()
 
         self._number_comments = 0
+        self.__name__ = 'Section'
 
 
     @property
@@ -401,6 +441,10 @@ class Section:
 
         # s.append('*\n')
         return ''.join(s)
+
+
+    def __repr__(self):
+        return f'<{self.__module__}.{self.__name__} {self._definitions.__repr__()} at {hex(id(self))})>'
 
 
 
