@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Vex files parser
 The vex module is a parser for VEX files that is written completely in Python.
@@ -101,7 +102,7 @@ class Entry:
     def key(self, a_key):
         if (self.type is EntryType.comment) and (a_key is not None):
             raise ValueError('key must be None for comment entries')
-        
+
         self._key = a_key
 
 
@@ -112,7 +113,7 @@ class Entry:
         if text.strip()[0] == '*':
             # It is a comment line. Nothing additionally to do
             return Entry(EntryType.comment, key=None, value=text.strip()[1:])
-        
+
         assert text.count('=') >= 1
         key, *value = [i for i in text.split('=')]
         key = key.strip()
@@ -141,16 +142,16 @@ class Entry:
         # Value can be a list of values (separated by a :)
         if ':' in value:
             value = value.split(':')
-        
+
         return Entry(text_entry, key, value)
 
-    
+
     def __getitem__(self, key):
         if self.key == key:
             return self.value
         else:
             raise KeyError(f'{key} not found')
-    
+
 
     def __setitem__(self, value):
         self.value = value
@@ -160,7 +161,7 @@ class Entry:
             self.value = value
         else:
             raise KeyError(f'{key} not found. New Entry required')
-    
+
 
     def to_string(self, heading_spaces=None):
         return self.__str__(heading_spaces)
@@ -188,7 +189,7 @@ class Entry:
             # Just as control. To make sure noone updated wrongly this code.
             raise ValueError('The EntryType is inconsistent with the __str__ representations of Entry')
 
-    
+
     def __repr__(self):
         return f'<{self.__module__}.{self.__name__} at {hex(id(self))}>'
 
@@ -200,10 +201,10 @@ class Definition(OrderedDict):
     each Entry (see that help, basically following the ' key = params..;'  format). For each key one
     of more entries are possible (in case the same key is used multiple types within that definition,
     e.g. as typically happens in 'ref $IF = ...' entries.
-    
+
     In the case of comment lines, the key will be 'comment#' where # will be a number describing that
-    this is the #-line within this definition. 
-    
+    this is the #-line within this definition.
+
     An empty Definition (without any entry) can be created, although a name must always be provided.
     """
     def __init__(self, name, list_of_entries=None):
@@ -250,16 +251,16 @@ class Definition(OrderedDict):
                     self._entries[new_entry.key] = [self._entries[new_entry.key], new_entry]
             else:
                 self._entries[new_entry.key] = new_entry
-    
+
 
     def __getitem__(self, key):
         return self._entries[key]
-    
+
 
     def __setitem__(self, key, value):
         self._entries[key] = value
 
-    
+
     def __len__(self):
         return len(self._entries)
 
@@ -287,7 +288,7 @@ class Definition(OrderedDict):
     def pop(self, *args):
         return self._entries.pop(*args)
 
-    
+
     def __contains__(self, item):
         return item in self._entries
 
@@ -299,7 +300,7 @@ class Definition(OrderedDict):
     def to_string(self):
         return self.__str__()
 
-    
+
     def __str__(self):
         # Preferred way. In CPython += strings is much faster but only there.
         s = [f'def {self.name};\n']
@@ -316,7 +317,7 @@ class Definition(OrderedDict):
 
 
 class Scan(Definition):
-    
+
     def __init__(self, name, list_of_entries=None):
         super().__init__(name, list_of_entries)
 
@@ -324,7 +325,7 @@ class Scan(Definition):
     def to_string(self):
         return self.__str__()
 
-    
+
     def __str__(self):
         # Preferred way. In CPython += strings is much faster but only there.
         s = [f'scan {self.name};\n']
@@ -388,12 +389,12 @@ class Section:
 
     def __getitem__(self, key):
         return self._definitions[key]
-    
+
 
     def __setitem__(self, key, value):
         self._definitions[key] = value
 
-    
+
     def __len__(self):
         return len(self._definitions)
 
@@ -421,14 +422,14 @@ class Section:
     def pop(self, *args):
         return self._definitions.pop(*args)
 
-    
+
     def __contains__(self, item):
         return item in self._definitions
 
 
     def __iter__(self):
         return iter(self._definitions)
-       
+
 
     def to_string(self):
         return self.__str__()
@@ -501,16 +502,16 @@ class Vex:
                 self._sections[a_section.key] = a_section
         else:
             raise ValueError('new_definition must be an instance of Section, Definition or Entry')
- 
+
 
     def __getitem__(self, key):
         return self._sections[key]
-    
+
 
     def __setitem__(self, key, value):
         self._sections[key] = value
 
-    
+
     def __len__(self):
         return len(self._sections)
 
@@ -538,14 +539,14 @@ class Vex:
     def pop(self, *args):
         return self._sections.pop(*args)
 
-    
+
     def __contains__(self, item):
         return item in self._sections
 
 
     def __iter__(self):
         return iter(self._sections)
-       
+
 
 
     def to_string(self):
@@ -573,7 +574,7 @@ class Vex:
         with open(filename, 'w') as newfile:
             newfile.write(self.to_string())
 
-        
+
     def from_file(self, filename):
         """Read a vexfile and stores it in the current object. In case this Vex object
         had previous data, everything will be flushed and only the data from vexfile
@@ -603,11 +604,11 @@ class Vex:
                         else:
                             prev_line += copy.copy(currentline)
                         continue
-                    
+
                     if prev_line is not None:
                         currentline = prev_line + currentline
                         prev_line = None
-                    
+
                     currentline = currentline.strip()
                     # Evaluates the different possible key words
                     if currentline[0] == '$':
@@ -624,7 +625,7 @@ class Vex:
                     elif currentline[:6] == 'enddef':
                         if current_definition is None:
                             raise ValueError('enddef without a previous def')
-                        
+
                         current_section.add_definition(current_definition)
                         current_definition = None
                     elif currentline[:5] == 'scan ':
@@ -635,7 +636,7 @@ class Vex:
                     elif currentline[:7] == 'endscan':
                         if current_definition is None:
                             raise ValueError('endscan without a previous scan')
-                        
+
                         current_section.add_definition(current_definition)
                         current_definition = None
                     else:
@@ -651,11 +652,11 @@ class Vex:
             if current_section is not None:
                 self.add_section(current_section)
 
-                        
 
 
 
-                
+
+
 
 
 
