@@ -1,5 +1,5 @@
 from distutils.core import setup
 
-setup(name'vex', version='1.1', description='VEX parser',
+setup(name'pyvexfile', version='1.1', description='VEX file parser',
     author='Benito Marcote', author_email='marcote@jive.eu',
-    py_modules=['vex'])
+    py_modules=['pyvexfile'])

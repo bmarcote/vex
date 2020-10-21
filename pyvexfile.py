@@ -11,7 +11,7 @@ All parameters are stored as strings, without further evaluation.
 Usage
 -----
 
-import vex
+import pyvexfile as vex
 
 v = vex.Vex(vexfilename)
 
@@ -654,12 +654,6 @@ class Vex:
 
 
 
-
-
-
-
-
-
 # def Vex(file):
 #     fp = open(file, 'r')
 #     vex = fp.read()
@@ -669,3 +663,5 @@ class Vex:
 
 if __name__ == '__main__':
     print(Vex(sys.argv[1]))
+
+
