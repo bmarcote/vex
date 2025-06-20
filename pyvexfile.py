@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding:utf-8 -*-
 """
 Vex files parser
 The vex module is a parser for VEX files that is written completely in Python.
@@ -34,18 +35,16 @@ version 1.1 changes
 - Bug fixes (in Section.__repr__). Fixed by Jay Blanchard
 
 """
-
-import os
-import sys
-import copy
-from enum import Enum
-from collections import OrderedDict
-# default dicts are realiable ordered only in 3.7 and later, not in 3.6
-
+from collections import OrderedDict as _OrderedDict
+from enum import Enum as _Enum
+import copy as _copy
+import os as _os
+import sys as _sys
+import re as _re
 
 
-class EntryType(Enum):
-    """Accepted types for an entry line in a key file (ignoring section titles and def lines).
+class EntryType(_Enum):
+    """Accepted types for an entry line in a key file (ignoring section titles and def).
     The possible types are:
         - comment. A comment line
         - parameter. If the line has the form 'key = value'
@@ -107,8 +106,8 @@ class Entry:
 
 
     def entry_from_text(text):
-        """Interprets a string line (such as a line in the vex file) and saves it as an Entry
-        object
+        """Interprets a string line (such as a line in the vex file) and saves it as an 
+        Entry object
         """
         if text.strip()[0] == '*':
             # It is a comment line. Nothing additionally to do
@@ -117,8 +116,8 @@ class Entry:
         assert text.count('=') >= 1
         key, *value = [i for i in text.split('=')]
         key = key.strip()
-        if type(value) is list:
-            # In the case of >1 everything after the first = will be placed as the value (str)
+        if isinstance(value, list):
+            # In the case of >1 everything after first will be placed as the value (str)
             value = '='.join(value)
 
         value = value.strip()
@@ -136,8 +135,8 @@ class Entry:
             text_entry = EntryType.parameter
 
         # Removing the trailing ; that denotes the end of the line
-        # DO NOT DO THAT!! in some places as in the $FREQ, cahn_def, there are comment after it that
-        # should remain and they would produce a bad bahavior later
+        # DO NOT DO THAT!! in some places as in the $FREQ, cahn_def, there are comment 
+        # after it that should remain and they would produce a bad bahavior later
         # value = value.replace(';', '')
         # Value can be a list of values (separated by a :)
         if ':' in value:
@@ -145,6 +144,13 @@ class Entry:
 
         return Entry(text_entry, key, value)
 
+    def entry_literal(key, text):
+        """Interprets a string line (such as a line in the vex file) and saves it as an 
+        Entry object
+        """
+        text = text.strip()
+
+        return Entry(EntryType.parameter, key, text)
 
     def __getitem__(self, key):
         if self.key == key:
@@ -194,7 +200,7 @@ class Entry:
         return f'<{self.__module__}.{self.__name__} at {hex(id(self))}>'
 
 
-class Definition(OrderedDict):
+class Definition(_OrderedDict):
     """Represents a definition from a vex file (everything between a 'def name;' line and 'enddef;'
     A Definition consists of a name (the name written right after 'def', and an OrderedDict containing
     all the Entries within that definition. The keys from the OrderedDict are the same as the key in
@@ -210,7 +216,7 @@ class Definition(OrderedDict):
     def __init__(self, name, list_of_entries=None):
         self.name = name
         if list_of_entries is None:
-            self._entries = OrderedDict()
+            self._entries = _OrderedDict()
         else:
             self.entries = list_of_entries
 
@@ -224,7 +230,7 @@ class Definition(OrderedDict):
 
     @entries.setter
     def entries(self, new_entries):
-        self._entries = OrderedDict()
+        self._entries = _OrderedDict()
         for an_entry in new_entries:
             self.add_entry(an_entry)
 
@@ -351,7 +357,7 @@ class Section:
         if definitions is not None:
             self.definitions = definitions
         else:
-            self._definitions = OrderedDict()
+            self._definitions = _OrderedDict()
 
         self._number_comments = 0
         self.__name__ = 'Section'
@@ -366,7 +372,7 @@ class Section:
     def definitions(self, new_definitions):
         """A definition can be either a Definition or an Entry (typically because it is a comment line)
         """
-        self._definitions = OrderedDict()
+        self._definitions = _OrderedDict()
         for new_definition in new_definitions:
             self.add_definition(new_definition)
 
@@ -467,7 +473,7 @@ class Vex:
     """
     def __init__(self, name, vexfile=None):
         self.name = name
-        self._sections = OrderedDict()
+        self._sections = _OrderedDict()
         self._number_comments = 0
 
         if vexfile is not None:
@@ -483,8 +489,8 @@ class Vex:
     def sections(self, new_sections):
         """A section can be either a Definition or an Entry (typically because it is a comment line)
         """
-        self._sections = OrderedDict()
-        for new_section in new_section:
+        self._sections = _OrderedDict()
+        for new_section in new_sections:
             self.add_section(new_section)
 
 
@@ -568,8 +574,8 @@ class Vex:
         """Save the current Vex object to a text file called filename.
         If overwrite is False and the file already exists, raises an Exception.
         """
-        if (not overwrite) and (os.path.exists(newfile)):
-            raise FileExistsError(f'{newfile} exists and will not be overwrite')
+        if (not overwrite) and (_os.path.exists(filename)):
+            raise FileExistsError(f'{filename} exists and will not be overwrite')
 
         with open(filename, 'w') as newfile:
             newfile.write(self.to_string())
@@ -586,6 +592,7 @@ class Vex:
             prev_line = None
             current_section = None
             current_definition = None
+            literal = None
             for vexline in vexlines:
                 currentline = vexline
                 # print(currentline)
@@ -600,9 +607,9 @@ class Vex:
                     # Checks if this is the full line, otherwise save it cumulatively
                     if ';' not in currentline:
                         if prev_line is None:
-                            prev_line = copy.copy(currentline)
+                            prev_line = _copy.copy(currentline)
                         else:
-                            prev_line += copy.copy(currentline)
+                            prev_line += _copy.copy(currentline)
                         continue
 
                     if prev_line is not None:
@@ -610,8 +617,20 @@ class Vex:
                         prev_line = None
 
                     currentline = currentline.strip()
-                    # Evaluates the different possible key words
-                    if currentline[0] == '$':
+                    # Evaluates the different possible key words, starting with literals
+                    if currentline.startswith("start_literal"):
+                        rule = r"start_literal\((.*)\)"
+                        literal = _re.findall(rule, currentline)[0].strip()
+                    elif isinstance(literal, str) and "end_literal" in currentline:
+                        i = currentline.find("end_literal")
+                        if current_definition is not None:
+                            current_definition.add_entry(
+                                Entry.entry_literal(literal, currentline[:i]))
+                            literal = None
+                        else:
+                            raise ValueError(
+                                'A literal outside a definition')
+                    elif currentline[0] == '$':
                         if current_section is not None:
                             # we just finished the prev. section and we are starting a new one
                             self.add_section(current_section)
@@ -651,7 +670,7 @@ class Vex:
             # End of the file, add the final section if exists
             if current_section is not None:
                 self.add_section(current_section)
-
+        return
 
 
 # def Vex(file):
@@ -662,6 +681,4 @@ class Vex:
 
 
 if __name__ == '__main__':
-    print(Vex(sys.argv[1]))
-
-
+    print(Vex(_sys.argv[1]))
