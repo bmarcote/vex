@@ -1,0 +1,30 @@
+VEX_rev = 1.5;
+* Hand-written file exercising the syntax that a line-based parser gets wrong.
+
+$GLOBAL;
+     ref $EXPER = EDGE;
+
+$EXPER;
+def EDGE;
+     exper_name = EDGE;   * comment after a statement
+     exper_description = "A string with ; and * inside";
+     PI_name = Someone;
+enddef;
+$SOURCE;
+def J1753+2848;
+     source_name = J1753+2848;
+     ra = 17h53m42.4736450s; dec =  28d48'04.938910"; ref_coord_frame = J2000;
+enddef;
+$FREQ;
+def 4632MHz;
+     chan_def =  : 4632 MHz : L :   32.00 MHz : &CH01 : &BBC01 : &NoCal; * RCP
+     chan_def =  : 4632 MHz : L :
+                   32.00 MHz : &CH02 : &BBC09 : &NoCal; * statement over two lines
+     sample_rate = 64.0 Ms/sec;
+     chan_def =  : 4632 MHz : U :   32.00 MHz : &CH03 : &BBC01 : &NoCal;
+enddef;
+$SCHEDULING_PARAMS;
+start_literal(sched);
+  Free text; with semicolons * asterisks = equals
+  and an end_literal(other); that must not close the block.
+end_literal(sched);

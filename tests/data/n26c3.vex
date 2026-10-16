@@ -1,0 +1,1297 @@
+VEX_rev = 1.5;
+*    pySCHED version: 1.29.0
+*    SCHED version:   Release 12.0; March 2025
+*    VEX/SCHED:       1.5.5
+*    Other versions: Sched:  12.0 JPL-ephem: 1.01
+*    Catalog versions:
+*       Frequency: 2026Jun05-13:46:00
+*       Station:   2026Jul21-13:16:08
+*       Location:  2020Jan12
+*------------------------------------------------------------------------------
+$GLOBAL;
+     ref $EXPER = N26C3;
+*                                                      +------------+
+*                         PI revision number:          |    1.0000  |
+*                                                      +------------+
+*    mode:       vlbi
+*------------------------------------------------------------------------------
+$EXPER;
+*
+def N26C3;
+     exper_name = N26C3;
+     exper_description = "Network Monitoring Experiment";
+     PI_name = marcote;
+     PI_email = marcote@jive.eu;
+*    address:   Oude Hoogeveensedijk 3
+*               7991PD Dwingeloo
+*               The Netherlands
+*               
+*    phone:     +31 521 596 530
+*    during obs:+31 521 596 530
+*    fax:       
+*    C-band (6cm) NME and ftp fringe test for Session 3, 2026.
+*    4096 Mbps, L+R, 2-bit sampling, 32 BBC, 32 MHz filters
+*    Please DO NOT use the phase cal signal.
+*
+*    year, doy: 2026, 293
+*    date     : Tue 20 Oct 2026
+*    MJD      : 61333
+     exper_nominal_start=2026y293d11h00m00s;
+     exper_nominal_stop=2026y293d14h00m00s;
+*
+*-------------------- cover  letter --------------------
+*
+*This is the schedule for the 6cm NME and ftp fringe-test on 20 October 2026
+*involving 15 antennas:
+*Jb2, Wb, Ef, Mc, O8, T6, Ur, Tr, Hh, Ir, Cm, Da, De, Kn, Pi
+*
+*The following ftp-fringe tests are scheduled throughout the experiment (UT times):
+*
+*11:10:00 (scan  2, 2 sec, J1753+2848)
+*11:40:00 (scan  4, 2 sec, J1753+2848)
+*12:10:00 (scan  6, 2 sec, J1753+2848)
+*12:40:00 (scan  8, 2 sec, J1753+2848)
+*13:10:00 (scan 10, 2 sec, J1753+2848)
+*13:40:00 (scan 12, 2 sec, J1753+2848)
+*
+*------------------------- end -------------------------
+*
+     target_correlator = JIVE;
+*
+*    integr_time    : 1.0 s
+*    number_channels: 8
+*    number_antenna : 15
+*    cross_polarize : Yes
+*    weight_func    : UNIFORM
+*    distrib_medium : FTP
+*    distrib_format : FITS
+*    source_pos_cat : STANDARD
+*    distribute_to  :
+*                     N/A
+*                     
+*                     
+*                     
+*
+enddef;
+*------------------------------------------------------------------------------
+$MODE;
+*
+def evn6cm-4Gbps-32MHz;
+     ref $PROCEDURES = Procedure:Jb:Wb:Ef:Mc:O8:T6:Ur:Tr:Hh:Ir:Cm:Kn:Pi:Da:De;
+     ref $IF = LO@4088MHzDPolNoTone:Ef;
+     ref $IF = LO@4088MHzDPolNoTone#02:Ir:O8;
+     ref $IF = LO@4088MHzDPolNoTone#03:T6;
+     ref $IF = LO@4088MHzDPolNoTone#04:Tr;
+     ref $IF = LO@4344MHzDPolNoTone:Mc;
+     ref $IF = LO@4517MHzDPolNoTone:Wb;
+     ref $IF = LO@4600MHzDPolNoTone:Hh;
+     ref $IF = LO@4600MHzDPolNoTone#02:Ur;
+     ref $IF = LO@5624MHzDPolNoTone:Cm:Da:De:Kn:Pi;
+     ref $IF = LO@5624MHzDPolNoTone#02:Jb;
+     ref $BBC = 16BBCs:Ef;
+     ref $BBC = 16BBCs#02:Hh;
+     ref $BBC = 16BBCs#03:Ir:Mc:O8;
+     ref $BBC = 16BBCs#04:Jb;
+     ref $BBC = 16BBCs#05:T6;
+     ref $BBC = 16BBCs#06:Tr;
+     ref $BBC = 16BBCs#07:Ur;
+     ref $BBC = 2BBCs:Cm:Da:De:Kn:Pi;
+     ref $BBC = 4BBCs:Wb;
+     ref $PHASE_CAL_DETECT = NoDetect:Cm:Da:De:Ef:Hh:Ir:Jb:Kn:Mc:O8:Pi:T6:Tr:Ur:Wb;
+     ref $FREQ = 4632MHz32x32MHz:Ef:Hh:Ir:Jb:Mc:O8:T6:Tr:Ur;
+     ref $FREQ = 4888MHz2x64MHz:Cm:Da:De:Kn:Pi;
+     ref $FREQ = 4888MHz8x32MHz:Wb;
+     ref $TRACKS = VDIF5032.2Ch2bit1to1:Cm:Da:De:Kn:Pi;
+     ref $TRACKS = VDIF8032.32Ch2bit1to1:Ef:Hh:Ir:Jb:Mc:O8:T6:Tr:Ur;
+     ref $TRACKS = VDIF8032.8Ch2bit1to1:Wb;
+     ref $ROLL = NoRoll:Cm:Da:De:Ef:Hh:Ir:Jb:Kn:Mc:O8:Pi:T6:Tr:Ur:Wb;
+enddef;
+*------------------------------------------------------------------------------
+$IF;
+*
+def LO@4088MHzDPolNoTone;
+* evn6cm-4Gbps-32MHz: Ef
+     if_def = &IF_A1 : A1 : R :   4088.00 MHz : U;
+     if_def = &IF_C3 : C3 : L :   4088.00 MHz : U;
+     if_def = &IF_B1 : B1 : R :   4088.00 MHz : U;
+     if_def = &IF_D3 : D3 : L :   4088.00 MHz : U;
+enddef;
+*
+def LO@4088MHzDPolNoTone#02;
+* evn6cm-4Gbps-32MHz: Ir, O8
+     if_def = &IF_A1 : A1 : R :   4088.00 MHz : U;
+     if_def = &IF_C1 : C1 : L :   4088.00 MHz : U;
+     if_def = &IF_B1 : B1 : R :   4088.00 MHz : U;
+     if_def = &IF_D1 : D1 : L :   4088.00 MHz : U;
+enddef;
+*
+def LO@4088MHzDPolNoTone#03;
+* evn6cm-4Gbps-32MHz: T6
+     if_def = &IF_A4 : A4 : R :   4088.00 MHz : U;
+     if_def = &IF_C3 : C3 : L :   4088.00 MHz : U;
+     if_def = &IF_B4 : B4 : R :   4088.00 MHz : U;
+     if_def = &IF_D3 : D3 : L :   4088.00 MHz : U;
+enddef;
+*
+def LO@4088MHzDPolNoTone#04;
+* evn6cm-4Gbps-32MHz: Tr
+     if_def = &IF_A1 : A1 : R :   4088.00 MHz : U;
+     if_def = &IF_B1 : B1 : L :   4088.00 MHz : U;
+enddef;
+*
+def LO@4344MHzDPolNoTone;
+* evn6cm-4Gbps-32MHz: Mc
+     if_def = &IF_A1 : A1 : R :   4344.00 MHz : U;
+     if_def = &IF_C1 : C1 : L :   4344.00 MHz : U;
+     if_def = &IF_B1 : B1 : R :   4344.00 MHz : U;
+     if_def = &IF_D1 : D1 : L :   4344.00 MHz : U;
+enddef;
+*
+def LO@4517MHzDPolNoTone;
+* evn6cm-4Gbps-32MHz: Wb
+     if_def = &IF_A1 : A1 : R :   4517.00 MHz : U;
+     if_def = &IF_B1 : B1 : L :   4517.00 MHz : U;
+enddef;
+*
+def LO@4600MHzDPolNoTone;
+* evn6cm-4Gbps-32MHz: Hh
+     if_def = &IF_A1 : A1 : R :   4600.00 MHz : U;
+     if_def = &IF_C1 : C1 : L :   4600.00 MHz : U;
+     if_def = &IF_B2 : B2 : R :   4600.00 MHz : U;
+enddef;
+*
+def LO@4600MHzDPolNoTone#02;
+* evn6cm-4Gbps-32MHz: Ur
+     if_def = &IF_A2 : A2 : R :   4600.00 MHz : U;
+     if_def = &IF_C1 : C1 : L :   4600.00 MHz : U;
+     if_def = &IF_B2 : B2 : R :   4600.00 MHz : U;
+     if_def = &IF_D1 : D1 : L :   4600.00 MHz : U;
+enddef;
+*
+def LO@5624MHzDPolNoTone;
+* evn6cm-4Gbps-32MHz: Cm, Da, De, Kn, Pi
+     if_def = &IF_A1 : A1 : R :   5624.00 MHz : L;
+     if_def = &IF_B1 : B1 : L :   5624.00 MHz : L;
+enddef;
+*
+def LO@5624MHzDPolNoTone#02;
+* evn6cm-4Gbps-32MHz: Jb
+     if_def = &IF_A2 : A2 : R :   5624.00 MHz : L;
+     if_def = &IF_B2 : B2 : L :   5624.00 MHz : L;
+enddef;
+*------------------------------------------------------------------------------
+$BBC;
+*
+def 16BBCs;
+* evn6cm-4Gbps-32MHz: Ef
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_C3;
+     BBC_assign = &BBC02 :  2 : &IF_A1;
+     BBC_assign = &BBC10 : 10 : &IF_C3;
+     BBC_assign = &BBC03 :  3 : &IF_A1;
+     BBC_assign = &BBC11 : 11 : &IF_C3;
+     BBC_assign = &BBC04 :  4 : &IF_A1;
+     BBC_assign = &BBC12 : 12 : &IF_C3;
+     BBC_assign = &BBC05 :  5 : &IF_B1;
+     BBC_assign = &BBC13 : 13 : &IF_D3;
+     BBC_assign = &BBC06 :  6 : &IF_B1;
+     BBC_assign = &BBC14 : 14 : &IF_D3;
+     BBC_assign = &BBC07 :  7 : &IF_B1;
+     BBC_assign = &BBC15 : 15 : &IF_D3;
+     BBC_assign = &BBC08 :  8 : &IF_B1;
+     BBC_assign = &BBC16 : 16 : &IF_D3;
+enddef;
+*
+def 16BBCs#02;
+* evn6cm-4Gbps-32MHz: Hh
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_C1;
+     BBC_assign = &BBC02 :  2 : &IF_A1;
+     BBC_assign = &BBC10 : 10 : &IF_C1;
+     BBC_assign = &BBC03 :  3 : &IF_A1;
+     BBC_assign = &BBC11 : 11 : &IF_C1;
+     BBC_assign = &BBC04 :  4 : &IF_A1;
+     BBC_assign = &BBC12 : 12 : &IF_C1;
+     BBC_assign = &BBC05 :  5 : &IF_B2;
+     BBC_assign = &BBC13 : 13 : &IF_C1;
+     BBC_assign = &BBC06 :  6 : &IF_B2;
+     BBC_assign = &BBC14 : 14 : &IF_C1;
+     BBC_assign = &BBC07 :  7 : &IF_B2;
+     BBC_assign = &BBC15 : 15 : &IF_C1;
+     BBC_assign = &BBC08 :  8 : &IF_B2;
+     BBC_assign = &BBC16 : 16 : &IF_C1;
+enddef;
+*
+def 16BBCs#03;
+* evn6cm-4Gbps-32MHz: Ir, Mc, O8
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_C1;
+     BBC_assign = &BBC02 :  2 : &IF_A1;
+     BBC_assign = &BBC10 : 10 : &IF_C1;
+     BBC_assign = &BBC03 :  3 : &IF_A1;
+     BBC_assign = &BBC11 : 11 : &IF_C1;
+     BBC_assign = &BBC04 :  4 : &IF_A1;
+     BBC_assign = &BBC12 : 12 : &IF_C1;
+     BBC_assign = &BBC05 :  5 : &IF_B1;
+     BBC_assign = &BBC13 : 13 : &IF_D1;
+     BBC_assign = &BBC06 :  6 : &IF_B1;
+     BBC_assign = &BBC14 : 14 : &IF_D1;
+     BBC_assign = &BBC07 :  7 : &IF_B1;
+     BBC_assign = &BBC15 : 15 : &IF_D1;
+     BBC_assign = &BBC08 :  8 : &IF_B1;
+     BBC_assign = &BBC16 : 16 : &IF_D1;
+enddef;
+*
+def 16BBCs#04;
+* evn6cm-4Gbps-32MHz: Jb
+     BBC_assign = &BBC01 :  1 : &IF_A2;
+     BBC_assign = &BBC09 :  9 : &IF_B2;
+     BBC_assign = &BBC02 :  2 : &IF_A2;
+     BBC_assign = &BBC10 : 10 : &IF_B2;
+     BBC_assign = &BBC03 :  3 : &IF_A2;
+     BBC_assign = &BBC11 : 11 : &IF_B2;
+     BBC_assign = &BBC04 :  4 : &IF_A2;
+     BBC_assign = &BBC12 : 12 : &IF_B2;
+     BBC_assign = &BBC05 :  5 : &IF_A2;
+     BBC_assign = &BBC13 : 13 : &IF_B2;
+     BBC_assign = &BBC06 :  6 : &IF_A2;
+     BBC_assign = &BBC14 : 14 : &IF_B2;
+     BBC_assign = &BBC07 :  7 : &IF_A2;
+     BBC_assign = &BBC15 : 15 : &IF_B2;
+     BBC_assign = &BBC08 :  8 : &IF_A2;
+     BBC_assign = &BBC16 : 16 : &IF_B2;
+enddef;
+*
+def 16BBCs#05;
+* evn6cm-4Gbps-32MHz: T6
+     BBC_assign = &BBC01 :  1 : &IF_A4;
+     BBC_assign = &BBC09 :  9 : &IF_C3;
+     BBC_assign = &BBC02 :  2 : &IF_A4;
+     BBC_assign = &BBC10 : 10 : &IF_C3;
+     BBC_assign = &BBC03 :  3 : &IF_A4;
+     BBC_assign = &BBC11 : 11 : &IF_C3;
+     BBC_assign = &BBC04 :  4 : &IF_A4;
+     BBC_assign = &BBC12 : 12 : &IF_C3;
+     BBC_assign = &BBC05 :  5 : &IF_B4;
+     BBC_assign = &BBC13 : 13 : &IF_D3;
+     BBC_assign = &BBC06 :  6 : &IF_B4;
+     BBC_assign = &BBC14 : 14 : &IF_D3;
+     BBC_assign = &BBC07 :  7 : &IF_B4;
+     BBC_assign = &BBC15 : 15 : &IF_D3;
+     BBC_assign = &BBC08 :  8 : &IF_B4;
+     BBC_assign = &BBC16 : 16 : &IF_D3;
+enddef;
+*
+def 16BBCs#06;
+* evn6cm-4Gbps-32MHz: Tr
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_B1;
+     BBC_assign = &BBC02 :  2 : &IF_A1;
+     BBC_assign = &BBC10 : 10 : &IF_B1;
+     BBC_assign = &BBC03 :  3 : &IF_A1;
+     BBC_assign = &BBC11 : 11 : &IF_B1;
+     BBC_assign = &BBC04 :  4 : &IF_A1;
+     BBC_assign = &BBC12 : 12 : &IF_B1;
+     BBC_assign = &BBC05 :  5 : &IF_A1;
+     BBC_assign = &BBC13 : 13 : &IF_B1;
+     BBC_assign = &BBC06 :  6 : &IF_A1;
+     BBC_assign = &BBC14 : 14 : &IF_B1;
+     BBC_assign = &BBC07 :  7 : &IF_A1;
+     BBC_assign = &BBC15 : 15 : &IF_B1;
+     BBC_assign = &BBC08 :  8 : &IF_A1;
+     BBC_assign = &BBC16 : 16 : &IF_B1;
+enddef;
+*
+def 16BBCs#07;
+* evn6cm-4Gbps-32MHz: Ur
+     BBC_assign = &BBC01 :  1 : &IF_A2;
+     BBC_assign = &BBC09 :  9 : &IF_C1;
+     BBC_assign = &BBC02 :  2 : &IF_A2;
+     BBC_assign = &BBC10 : 10 : &IF_C1;
+     BBC_assign = &BBC03 :  3 : &IF_A2;
+     BBC_assign = &BBC11 : 11 : &IF_C1;
+     BBC_assign = &BBC04 :  4 : &IF_A2;
+     BBC_assign = &BBC12 : 12 : &IF_C1;
+     BBC_assign = &BBC05 :  5 : &IF_B2;
+     BBC_assign = &BBC13 : 13 : &IF_D1;
+     BBC_assign = &BBC06 :  6 : &IF_B2;
+     BBC_assign = &BBC14 : 14 : &IF_D1;
+     BBC_assign = &BBC07 :  7 : &IF_B2;
+     BBC_assign = &BBC15 : 15 : &IF_D1;
+     BBC_assign = &BBC08 :  8 : &IF_B2;
+     BBC_assign = &BBC16 : 16 : &IF_D1;
+enddef;
+*
+def 2BBCs;
+* evn6cm-4Gbps-32MHz: Cm, Da, De, Kn, Pi
+     BBC_assign = &BBC01 : 1 : &IF_A1;
+     BBC_assign = &BBC09 : 9 : &IF_B1;
+enddef;
+*
+def 4BBCs;
+* evn6cm-4Gbps-32MHz: Wb
+     BBC_assign = &BBC01 :  1 : &IF_A1;
+     BBC_assign = &BBC09 :  9 : &IF_B1;
+     BBC_assign = &BBC02 :  2 : &IF_A1;
+     BBC_assign = &BBC10 : 10 : &IF_B1;
+enddef;
+*------------------------------------------------------------------------------
+$PHASE_CAL_DETECT;
+*
+def NoDetect;
+* evn6cm-4Gbps-32MHz: Cm, Da, De, Ef, Hh, Ir, Jb, Kn, Mc, O8, Pi, T6, Tr, Ur, Wb
+     phase_cal_detect = &NoCal;
+enddef;
+*------------------------------------------------------------------------------
+$FREQ;
+*
+def 4632MHz32x32MHz;
+* evn6cm-4Gbps-32MHz: Ef, Hh, Ir, Jb, Mc, O8, T6, Tr, Ur
+     chan_def =  : 4632 MHz : L :   32.00 MHz : &CH01 : &BBC01 : &NoCal; * RCP
+     chan_def =  : 4632 MHz : L :   32.00 MHz : &CH02 : &BBC09 : &NoCal; * LCP
+     chan_def =  : 4632 MHz : U :   32.00 MHz : &CH03 : &BBC01 : &NoCal; * RCP
+     chan_def =  : 4632 MHz : U :   32.00 MHz : &CH04 : &BBC09 : &NoCal; * LCP
+     chan_def =  : 4696 MHz : L :   32.00 MHz : &CH05 : &BBC02 : &NoCal; * RCP
+     chan_def =  : 4696 MHz : L :   32.00 MHz : &CH06 : &BBC10 : &NoCal; * LCP
+     chan_def =  : 4696 MHz : U :   32.00 MHz : &CH07 : &BBC02 : &NoCal; * RCP
+     chan_def =  : 4696 MHz : U :   32.00 MHz : &CH08 : &BBC10 : &NoCal; * LCP
+     chan_def =  : 4760 MHz : L :   32.00 MHz : &CH09 : &BBC03 : &NoCal; * RCP
+     chan_def =  : 4760 MHz : L :   32.00 MHz : &CH10 : &BBC11 : &NoCal; * LCP
+     chan_def =  : 4760 MHz : U :   32.00 MHz : &CH11 : &BBC03 : &NoCal; * RCP
+     chan_def =  : 4760 MHz : U :   32.00 MHz : &CH12 : &BBC11 : &NoCal; * LCP
+     chan_def =  : 4824 MHz : L :   32.00 MHz : &CH13 : &BBC04 : &NoCal; * RCP
+     chan_def =  : 4824 MHz : L :   32.00 MHz : &CH14 : &BBC12 : &NoCal; * LCP
+     chan_def =  : 4824 MHz : U :   32.00 MHz : &CH15 : &BBC04 : &NoCal; * RCP
+     chan_def =  : 4824 MHz : U :   32.00 MHz : &CH16 : &BBC12 : &NoCal; * LCP
+     chan_def =  : 4888 MHz : L :   32.00 MHz : &CH17 : &BBC05 : &NoCal; * RCP
+     chan_def =  : 4888 MHz : L :   32.00 MHz : &CH18 : &BBC13 : &NoCal; * LCP
+     chan_def =  : 4888 MHz : U :   32.00 MHz : &CH19 : &BBC05 : &NoCal; * RCP
+     chan_def =  : 4888 MHz : U :   32.00 MHz : &CH20 : &BBC13 : &NoCal; * LCP
+     chan_def =  : 4952 MHz : L :   32.00 MHz : &CH21 : &BBC06 : &NoCal; * RCP
+     chan_def =  : 4952 MHz : L :   32.00 MHz : &CH22 : &BBC14 : &NoCal; * LCP
+     chan_def =  : 4952 MHz : U :   32.00 MHz : &CH23 : &BBC06 : &NoCal; * RCP
+     chan_def =  : 4952 MHz : U :   32.00 MHz : &CH24 : &BBC14 : &NoCal; * LCP
+     chan_def =  : 5016 MHz : L :   32.00 MHz : &CH25 : &BBC07 : &NoCal; * RCP
+     chan_def =  : 5016 MHz : L :   32.00 MHz : &CH26 : &BBC15 : &NoCal; * LCP
+     chan_def =  : 5016 MHz : U :   32.00 MHz : &CH27 : &BBC07 : &NoCal; * RCP
+     chan_def =  : 5016 MHz : U :   32.00 MHz : &CH28 : &BBC15 : &NoCal; * LCP
+     chan_def =  : 5080 MHz : L :   32.00 MHz : &CH29 : &BBC08 : &NoCal; * RCP
+     chan_def =  : 5080 MHz : L :   32.00 MHz : &CH30 : &BBC16 : &NoCal; * LCP
+     chan_def =  : 5080 MHz : U :   32.00 MHz : &CH31 : &BBC08 : &NoCal; * RCP
+     chan_def =  : 5080 MHz : U :   32.00 MHz : &CH32 : &BBC16 : &NoCal; * LCP
+     sample_rate =  64.000 Ms/sec;
+enddef;
+*
+def 4888MHz2x64MHz;
+* evn6cm-4Gbps-32MHz: Cm, Da, De, Kn, Pi
+     chan_def =  : 4888 MHz : U :   64.00 MHz : &CH01 : &BBC01 : &NoCal; * RCP
+     chan_def =  : 4888 MHz : U :   64.00 MHz : &CH02 : &BBC09 : &NoCal; * LCP
+     sample_rate = 128.000 Ms/sec;
+enddef;
+*
+def 4888MHz8x32MHz;
+* evn6cm-4Gbps-32MHz: Wb
+     chan_def =  : 4888 MHz : L :   32.00 MHz : &CH01 : &BBC01 : &NoCal; * RCP
+     chan_def =  : 4888 MHz : L :   32.00 MHz : &CH02 : &BBC09 : &NoCal; * LCP
+     chan_def =  : 4888 MHz : U :   32.00 MHz : &CH03 : &BBC01 : &NoCal; * RCP
+     chan_def =  : 4888 MHz : U :   32.00 MHz : &CH04 : &BBC09 : &NoCal; * LCP
+     chan_def =  : 4952 MHz : L :   32.00 MHz : &CH05 : &BBC02 : &NoCal; * RCP
+     chan_def =  : 4952 MHz : L :   32.00 MHz : &CH06 : &BBC10 : &NoCal; * LCP
+     chan_def =  : 4952 MHz : U :   32.00 MHz : &CH07 : &BBC02 : &NoCal; * RCP
+     chan_def =  : 4952 MHz : U :   32.00 MHz : &CH08 : &BBC10 : &NoCal; * LCP
+     sample_rate =  64.000 Ms/sec;
+enddef;
+*------------------------------------------------------------------------------
+$TRACKS;
+*
+def VDIF5032.2Ch2bit1to1;
+* evn6cm-4Gbps-32MHz: Cm, Da, De, Kn, Pi
+     track_frame_format = VDIF5032;
+     fanout_def =  : &CH01 : sign : 1 : 1;
+     fanout_def =  : &CH01 :  mag : 1 : 1;
+     fanout_def =  : &CH02 : sign : 1 : 2;
+     fanout_def =  : &CH02 :  mag : 1 : 2;
+enddef;
+*
+def VDIF8032.32Ch2bit1to1;
+* evn6cm-4Gbps-32MHz: Ef, Hh, Ir, Jb, Mc, O8, T6, Tr, Ur
+     track_frame_format = VDIF8032;
+     fanout_def =  : &CH01 : sign : 1 :  1;
+     fanout_def =  : &CH01 :  mag : 1 :  1;
+     fanout_def =  : &CH02 : sign : 1 :  2;
+     fanout_def =  : &CH02 :  mag : 1 :  2;
+     fanout_def =  : &CH03 : sign : 1 :  3;
+     fanout_def =  : &CH03 :  mag : 1 :  3;
+     fanout_def =  : &CH04 : sign : 1 :  4;
+     fanout_def =  : &CH04 :  mag : 1 :  4;
+     fanout_def =  : &CH05 : sign : 1 :  5;
+     fanout_def =  : &CH05 :  mag : 1 :  5;
+     fanout_def =  : &CH06 : sign : 1 :  6;
+     fanout_def =  : &CH06 :  mag : 1 :  6;
+     fanout_def =  : &CH07 : sign : 1 :  7;
+     fanout_def =  : &CH07 :  mag : 1 :  7;
+     fanout_def =  : &CH08 : sign : 1 :  8;
+     fanout_def =  : &CH08 :  mag : 1 :  8;
+     fanout_def =  : &CH09 : sign : 1 :  9;
+     fanout_def =  : &CH09 :  mag : 1 :  9;
+     fanout_def =  : &CH10 : sign : 1 : 10;
+     fanout_def =  : &CH10 :  mag : 1 : 10;
+     fanout_def =  : &CH11 : sign : 1 : 11;
+     fanout_def =  : &CH11 :  mag : 1 : 11;
+     fanout_def =  : &CH12 : sign : 1 : 12;
+     fanout_def =  : &CH12 :  mag : 1 : 12;
+     fanout_def =  : &CH13 : sign : 1 : 13;
+     fanout_def =  : &CH13 :  mag : 1 : 13;
+     fanout_def =  : &CH14 : sign : 1 : 14;
+     fanout_def =  : &CH14 :  mag : 1 : 14;
+     fanout_def =  : &CH15 : sign : 1 : 15;
+     fanout_def =  : &CH15 :  mag : 1 : 15;
+     fanout_def =  : &CH16 : sign : 1 : 16;
+     fanout_def =  : &CH16 :  mag : 1 : 16;
+     fanout_def =  : &CH17 : sign : 1 : 17;
+     fanout_def =  : &CH17 :  mag : 1 : 17;
+     fanout_def =  : &CH18 : sign : 1 : 18;
+     fanout_def =  : &CH18 :  mag : 1 : 18;
+     fanout_def =  : &CH19 : sign : 1 : 19;
+     fanout_def =  : &CH19 :  mag : 1 : 19;
+     fanout_def =  : &CH20 : sign : 1 : 20;
+     fanout_def =  : &CH20 :  mag : 1 : 20;
+     fanout_def =  : &CH21 : sign : 1 : 21;
+     fanout_def =  : &CH21 :  mag : 1 : 21;
+     fanout_def =  : &CH22 : sign : 1 : 22;
+     fanout_def =  : &CH22 :  mag : 1 : 22;
+     fanout_def =  : &CH23 : sign : 1 : 23;
+     fanout_def =  : &CH23 :  mag : 1 : 23;
+     fanout_def =  : &CH24 : sign : 1 : 24;
+     fanout_def =  : &CH24 :  mag : 1 : 24;
+     fanout_def =  : &CH25 : sign : 1 : 25;
+     fanout_def =  : &CH25 :  mag : 1 : 25;
+     fanout_def =  : &CH26 : sign : 1 : 26;
+     fanout_def =  : &CH26 :  mag : 1 : 26;
+     fanout_def =  : &CH27 : sign : 1 : 27;
+     fanout_def =  : &CH27 :  mag : 1 : 27;
+     fanout_def =  : &CH28 : sign : 1 : 28;
+     fanout_def =  : &CH28 :  mag : 1 : 28;
+     fanout_def =  : &CH29 : sign : 1 : 29;
+     fanout_def =  : &CH29 :  mag : 1 : 29;
+     fanout_def =  : &CH30 : sign : 1 : 30;
+     fanout_def =  : &CH30 :  mag : 1 : 30;
+     fanout_def =  : &CH31 : sign : 1 : 31;
+     fanout_def =  : &CH31 :  mag : 1 : 31;
+     fanout_def =  : &CH32 : sign : 1 : 32;
+     fanout_def =  : &CH32 :  mag : 1 : 32;
+enddef;
+*
+def VDIF8032.8Ch2bit1to1;
+* evn6cm-4Gbps-32MHz: Wb
+     track_frame_format = VDIF8032;
+     fanout_def =  : &CH01 : sign : 1 : 1;
+     fanout_def =  : &CH01 :  mag : 1 : 1;
+     fanout_def =  : &CH02 : sign : 1 : 2;
+     fanout_def =  : &CH02 :  mag : 1 : 2;
+     fanout_def =  : &CH03 : sign : 1 : 3;
+     fanout_def =  : &CH03 :  mag : 1 : 3;
+     fanout_def =  : &CH04 : sign : 1 : 4;
+     fanout_def =  : &CH04 :  mag : 1 : 4;
+     fanout_def =  : &CH05 : sign : 1 : 5;
+     fanout_def =  : &CH05 :  mag : 1 : 5;
+     fanout_def =  : &CH06 : sign : 1 : 6;
+     fanout_def =  : &CH06 :  mag : 1 : 6;
+     fanout_def =  : &CH07 : sign : 1 : 7;
+     fanout_def =  : &CH07 :  mag : 1 : 7;
+     fanout_def =  : &CH08 : sign : 1 : 8;
+     fanout_def =  : &CH08 :  mag : 1 : 8;
+enddef;
+*------------------------------------------------------------------------------
+$ROLL;
+*
+def NoRoll;
+* evn6cm-4Gbps-32MHz: Cm, Da, De, Ef, Hh, Ir, Jb, Kn, Mc, O8, Pi, T6, Tr, Ur, Wb
+     roll = off;
+enddef;
+*------------------------------------------------------------------------------
+$STATION;
+*
+def Jb;
+     ref $ANTENNA = JODRELL2;
+     ref $DAS = DBBC+Mark5C;
+     ref $SITE = JODRELL2;
+enddef;
+*
+def Wb;
+     ref $ANTENNA = WSTRBORK;
+     ref $DAS = DBBC+Mark5C;
+     ref $SITE = WSTRBORK;
+enddef;
+*
+def Ef;
+     ref $ANTENNA = EFLSBERG;
+     ref $DAS = DBBC+Mark5C;
+     ref $SITE = EFLSBERG;
+enddef;
+*
+def Mc;
+     ref $ANTENNA = MEDICINA;
+     ref $DAS = DBBC+Mark5C;
+     ref $SITE = MEDICINA;
+enddef;
+*
+def O8;
+     ref $ANTENNA = ONSALA85;
+     ref $DAS = DBBC+Mark5C;
+     ref $SITE = ONSALA85;
+enddef;
+*
+def T6;
+     ref $ANTENNA = TIANMA65;
+     ref $DAS = DBBC+Mark5C;
+     ref $SITE = TIANMA65;
+enddef;
+*
+def Ur;
+     ref $ANTENNA = URUMQI;
+     ref $DAS = DBBC+Mark5C;
+     ref $SITE = URUMQI;
+enddef;
+*
+def Tr;
+     ref $ANTENNA = TORUN;
+     ref $DAS = DBBC+Mark5C;
+     ref $SITE = TORUN;
+enddef;
+*
+def Hh;
+     ref $ANTENNA = HART;
+     ref $DAS = DBBC+Mark5C;
+     ref $SITE = HART;
+enddef;
+*
+def Ir;
+     ref $ANTENNA = IRBENE;
+     ref $DAS = DBBC+Mark5C;
+     ref $SITE = IRBENE;
+enddef;
+*
+def Cm;
+     ref $ANTENNA = CAMBG32M;
+     ref $DAS = WIDAR+Mark5C;
+     ref $SITE = CAMBG32M;
+enddef;
+*
+def Kn;
+     ref $ANTENNA = KNOCKIN;
+     ref $DAS = WIDAR+Mark5C;
+     ref $SITE = KNOCKIN;
+enddef;
+*
+def Pi;
+     ref $ANTENNA = KNOCKIN;
+     ref $DAS = WIDAR+Mark5C;
+     ref $SITE = PICKMERE;
+enddef;
+*
+def Da;
+     ref $ANTENNA = KNOCKIN;
+     ref $DAS = WIDAR+Mark5C;
+     ref $SITE = DARNHALL;
+enddef;
+*
+def De;
+     ref $ANTENNA = DEFFORD;
+     ref $DAS = WIDAR+Mark5C;
+     ref $SITE = DEFFORD;
+enddef;
+*------------------------------------------------------------------------------
+$ANTENNA;
+*
+def CAMBG32M;
+     axis_type = az : el;
+     antenna_motion = az :   40.0 deg/min : 2 sec;
+     antenna_motion = el :   20.0 deg/min : 2 sec;
+     pointing_sector = &ccw : az : 270.0 deg : 325.0 deg : el : 2.0 deg : 89.0 deg;
+     pointing_sector =   &n : az : 325.0 deg : 630.0 deg : el : 2.0 deg : 89.0 deg;
+     pointing_sector =  &cw : az : 630.0 deg : 685.0 deg : el : 2.0 deg : 89.0 deg;
+     axis_offset =      1.503 m;
+enddef;
+*
+def DEFFORD;
+     axis_type = az : el;
+     antenna_motion = az :   20.0 deg/min : 2 sec;
+     antenna_motion = el :   20.0 deg/min : 2 sec;
+     pointing_sector = &ccw : az : -85.0 deg : -35.0 deg : el : 2.5 deg : 90.0 deg;
+     pointing_sector =   &n : az : -35.0 deg : 275.0 deg : el : 2.5 deg : 90.0 deg;
+     pointing_sector =  &cw : az : 275.0 deg : 325.0 deg : el : 2.5 deg : 90.0 deg;
+     axis_offset =      1.901 m;
+enddef;
+*
+def EFLSBERG;
+     axis_type = az : el;
+     antenna_motion = az :   25.0 deg/min : 16 sec;
+     antenna_motion = el :   15.0 deg/min : 16 sec;
+     pointing_sector = &ccw : az :  34.0 deg : 120.0 deg : el : 9.0 deg : 89.0 deg;
+     pointing_sector =   &n : az : 120.0 deg : 394.0 deg : el : 9.0 deg : 89.0 deg;
+     pointing_sector =  &cw : az : 394.0 deg : 480.0 deg : el : 9.0 deg : 89.0 deg;
+     axis_offset =     0.0131 m;
+enddef;
+*
+def HART;
+     axis_type = ha : dec;
+     antenna_motion =  ha :   30.0 deg/min : 20 sec;
+     antenna_motion = dec :   30.0 deg/min : 20 sec;
+     axis_offset =     6.6934 m;
+enddef;
+*
+def IRBENE;
+     axis_type = az : el;
+     antenna_motion = az :  120.0 deg/min : 3 sec;
+     antenna_motion = el :  100.0 deg/min : 3 sec;
+     pointing_sector = &ccw : az : -320.0 deg : -40.0 deg : el : 5.0 deg : 90.0 deg;
+     pointing_sector =   &n : az :  -40.0 deg :  40.0 deg : el : 5.0 deg : 90.0 deg;
+     pointing_sector =  &cw : az :   40.0 deg : 320.0 deg : el : 5.0 deg : 90.0 deg;
+     axis_offset =        0.0 m;
+enddef;
+*
+def JODRELL2;
+     axis_type = az : el;
+     antenna_motion = az :   20.0 deg/min : 2 sec;
+     antenna_motion = el :   20.0 deg/min : 2 sec;
+     pointing_sector = &ccw : az : -90.0 deg : -30.0 deg : el : 1.0 deg : 90.0 deg;
+     pointing_sector =   &n : az : -30.0 deg : 270.0 deg : el : 1.0 deg : 90.0 deg;
+     pointing_sector =  &cw : az : 270.0 deg : 330.0 deg : el : 1.0 deg : 90.0 deg;
+     axis_offset =      0.458 m;
+enddef;
+*
+def KNOCKIN;
+     axis_type = az : el;
+     antenna_motion = az :   20.0 deg/min : 2 sec;
+     antenna_motion = el :   20.0 deg/min : 2 sec;
+     pointing_sector = &ccw : az : -85.0 deg : -35.0 deg : el : 2.5 deg : 90.0 deg;
+     pointing_sector =   &n : az : -35.0 deg : 275.0 deg : el : 2.5 deg : 90.0 deg;
+     pointing_sector =  &cw : az : 275.0 deg : 325.0 deg : el : 2.5 deg : 90.0 deg;
+     axis_offset =        0.0 m;
+enddef;
+*
+def MEDICINA;
+     axis_type = az : el;
+     antenna_motion = az :   45.0 deg/min : 3 sec;
+     antenna_motion = el :   30.0 deg/min : 3 sec;
+     pointing_sector = &ccw : az : 270.0 deg : 450.0 deg : el : 5.0 deg : 88.5 deg;
+     pointing_sector =   &n : az : 450.0 deg : 630.0 deg : el : 5.0 deg : 88.5 deg;
+     pointing_sector =  &cw : az : 630.0 deg : 810.0 deg : el : 5.0 deg : 88.5 deg;
+     axis_offset =     1.8278 m;
+enddef;
+*
+def ONSALA85;
+     axis_type = ha : dec;
+     antenna_motion =  ha :   17.6 deg/min : 5 sec;
+     antenna_motion = dec :   14.7 deg/min : 5 sec;
+     axis_offset =       2.15 m;
+enddef;
+*
+def TIANMA65;
+     axis_type = az : el;
+     antenna_motion = az :   30.0 deg/min : 2 sec;
+     antenna_motion = el :   15.0 deg/min : 2 sec;
+     pointing_sector = &ccw : az : -80.0 deg :  80.0 deg : el : 10.0 deg : 88.0 deg;
+     pointing_sector =   &n : az :  80.0 deg : 280.0 deg : el : 10.0 deg : 88.0 deg;
+     pointing_sector =  &cw : az : 280.0 deg : 440.0 deg : el : 10.0 deg : 88.0 deg;
+     axis_offset =     0.0096 m;
+enddef;
+*
+def TORUN;
+     axis_type = az : el;
+     antenna_motion = az :   30.0 deg/min : 21 sec;
+     antenna_motion = el :   17.0 deg/min : 21 sec;
+     pointing_sector = &ccw : az : -90.0 deg :  90.0 deg : el : 3.0 deg : 88.0 deg;
+     pointing_sector =   &n : az :  90.0 deg : 270.0 deg : el : 3.0 deg : 88.0 deg;
+     pointing_sector =  &cw : az : 270.0 deg : 450.0 deg : el : 3.0 deg : 88.0 deg;
+     axis_offset =        0.0 m;
+enddef;
+*
+def URUMQI;
+     axis_type = az : el;
+     antenna_motion = az :   60.0 deg/min : 2 sec;
+     antenna_motion = el :   30.0 deg/min : 2 sec;
+     pointing_sector = &ccw : az : -80.0 deg :  90.0 deg : el : 5.0 deg : 88.0 deg;
+     pointing_sector =   &n : az :  90.0 deg : 280.0 deg : el : 5.0 deg : 88.0 deg;
+     pointing_sector =  &cw : az : 280.0 deg : 450.0 deg : el : 5.0 deg : 88.0 deg;
+     axis_offset =    -0.0027 m;
+enddef;
+*
+def WSTRBORK;
+     axis_type = ha : dec;
+     antenna_motion =  ha :   18.0 deg/min : 10 sec;
+     antenna_motion = dec :   18.0 deg/min : 10 sec;
+     axis_offset =       4.95 m;
+enddef;
+*------------------------------------------------------------------------------
+$DAS;
+*
+def DBBC+Mark5C;
+     record_transport_type = Mark5C;
+     electronics_rack_type = DBBC;
+     number_drives = 2;
+     headstack = 1 :  : 0;
+     headstack = 2 :  : 1;
+     tape_motion = adaptive : 0 min : 0 min : 10 sec;
+enddef;
+*
+def WIDAR+Mark5C;
+     record_transport_type = Mark5C;
+     electronics_rack_type = WIDAR;
+     number_drives = 2;
+     headstack = 1 :  : 0;
+     headstack = 2 :  : 1;
+     tape_motion = adaptive : 0 min : 0 min : 10 sec;
+enddef;
+*------------------------------------------------------------------------------
+$SITE;
+*
+def CAMBG32M;
+     site_type = fixed;
+     site_name = CAMBG32M;
+     site_ID = Cm;
+     site_position =  3920356.15000 m :     2542.02000 m :  5014284.42000 m;
+     site_velocity =  -0.012020 m/yr :   0.017280 m/yr :   0.009390 m/yr;
+     site_position_epoch = 1997y001d;
+enddef;
+*
+def DARNHALL;
+     site_type = fixed;
+     site_name = DARNHALL;
+     site_ID = Da;
+     site_position =  3829087.89900 m :  -169568.95500 m :  5081082.34600 m;
+     site_velocity =  -0.011630 m/yr :   0.017060 m/yr :   0.009340 m/yr;
+     site_position_epoch = 1997y001d;
+enddef;
+*
+def DEFFORD;
+     site_type = fixed;
+     site_name = DEFFORD;
+     site_ID = De;
+     site_position =  3923442.56600 m :  -146914.33000 m :  5009755.12500 m;
+     site_velocity =  -0.011540 m/yr :   0.017290 m/yr :   0.009540 m/yr;
+     site_position_epoch = 1997y001d;
+enddef;
+*
+def EFLSBERG;
+     site_type = fixed;
+     site_name = EFLSBERG;
+     site_ID = Ef;
+     site_position =  4033947.15250 m :   486990.89610 m :  4900431.06040 m;
+     site_velocity =  -0.014310 m/yr :   0.016750 m/yr :   0.010770 m/yr;
+     site_position_epoch = 2020y001d;
+     horizon_map_az = 0.0 deg : 10.0 : 20.0 : 30.0 : 40.0 : 50.0 : 60.0 : 70.0 : 80.0 : 90.0 : 100.0 : 110.0 : 120.0 : 130.0 : 140.0 : 150.0 : 160.0 : 170.0 : 180.0 : 190.0 : 200.0 : 210.0 : 220.0 : 230.0 : 240.0 : 250.0 : 260.0 : 270.0 : 280.0 : 290.0 : 300.0 : 310.0 : 320.0 : 330.0 : 340.0 : 350.0 : 360.0;
+     horizon_map_el = 11.0 deg : 13.0 : 16.0 : 19.0 : 21.0 : 21.0 : 21.0 : 20.0 : 18.0 : 15.0 : 16.0 : 16.0 : 15.0 : 15.0 : 13.0 : 8.0 : 7.0 : 7.0 : 7.0 : 7.0 : 9.0 : 11.0 : 11.0 : 11.0 : 10.0 : 9.0 : 8.0 : 12.0 : 14.0 : 14.0 : 14.0 : 14.0 : 13.0 : 8.0 : 7.0 : 8.0 : 11.0;
+enddef;
+*
+def HART;
+     site_type = fixed;
+     site_name = HART;
+     site_ID = Hh;
+     site_position =  5085442.77210 m :  2668263.93000 m : -2768696.62990 m;
+     site_velocity =  -0.000110 m/yr :   0.019660 m/yr :   0.016730 m/yr;
+     site_position_epoch = 2020y001d;
+     horizon_map_az = 0.0 deg : 10.0 : 14.0 : 19.0 : 23.0 : 26.0 : 29.0 : 31.0 : 55.0 : 63.0 : 72.0 : 95.0 : 104.0 : 110.0 : 114.0 : 119.0 : 125.0 : 131.0 : 138.0 : 147.0 : 159.0 : 172.0 : 178.0 : 182.0 : 188.0 : 201.0 : 213.0 : 222.0 : 229.0 : 235.0 : 241.0 : 246.0 : 250.0 : 256.0 : 260.0 : 264.0 : 270.0 : 279.0 : 285.0 : 293.0 : 302.0 : 311.0 : 318.0 : 325.0 : 331.0 : 334.0 : 337.0 : 341.0 : 346.0 : 350.0 : 360.0;
+     horizon_map_el = 19.0 deg : 18.0 : 17.0 : 15.0 : 13.0 : 11.0 : 9.0 : 7.0 : 6.0 : 6.0 : 7.0 : 8.0 : 9.0 : 11.0 : 13.0 : 15.0 : 17.0 : 19.0 : 21.0 : 23.0 : 25.0 : 26.0 : 33.0 : 33.0 : 26.0 : 25.0 : 23.0 : 21.0 : 19.0 : 17.0 : 15.0 : 13.0 : 11.0 : 9.0 : 7.0 : 5.0 : 3.0 : 3.0 : 5.0 : 7.0 : 9.0 : 10.0 : 10.0 : 9.0 : 9.0 : 11.0 : 13.0 : 15.0 : 17.0 : 18.0 : 19.0;
+enddef;
+*
+def IRBENE;
+     site_type = fixed;
+     site_name = IRBENE;
+     site_ID = Ir;
+     site_position =  3183649.34100 m :  1276902.98500 m :  5359264.71500 m;
+     site_velocity =  -0.018580 m/yr :   0.014090 m/yr :   0.007680 m/yr;
+     site_position_epoch = 2016y320d;
+enddef;
+*
+def JODRELL2;
+     site_type = fixed;
+     site_name = JODRELL2;
+     site_ID = Jb;
+     site_position =  3822846.76000 m :  -153802.28000 m :  5086285.90000 m;
+     site_velocity =  -0.011700 m/yr :   0.017040 m/yr :   0.009310 m/yr;
+     site_position_epoch = 1997y001d;
+enddef;
+*
+def KNOCKIN;
+     site_type = fixed;
+     site_name = KNOCKIN;
+     site_ID = Kn;
+     site_position =  3860084.89800 m :  -202105.03900 m :  5056568.84800 m;
+     site_velocity =  -0.011470 m/yr :   0.017130 m/yr :   0.009440 m/yr;
+     site_position_epoch = 1997y001d;
+enddef;
+*
+def MEDICINA;
+     site_type = fixed;
+     site_name = MEDICINA;
+     site_ID = Mc;
+     site_position =  4461369.56820 m :   919597.24890 m :  4449559.47020 m;
+     site_velocity =  -0.018160 m/yr :   0.018750 m/yr :   0.012000 m/yr;
+     site_position_epoch = 2020y001d;
+enddef;
+*
+def ONSALA85;
+     site_type = fixed;
+     site_name = ONSALA85;
+     site_ID = O8;
+     site_position =  3370965.87870 m :   711466.19780 m :  5349664.20060 m;
+     site_velocity =  -0.014360 m/yr :   0.014530 m/yr :   0.010520 m/yr;
+     site_position_epoch = 2014y001d;
+enddef;
+*
+def PICKMERE;
+     site_type = fixed;
+     site_name = PICKMERE;
+     site_ID = Pi;
+     site_position =  3817549.95600 m :  -163031.14100 m :  5089896.65400 m;
+     site_velocity =  -0.011680 m/yr :   0.017030 m/yr :   0.009300 m/yr;
+     site_position_epoch = 1997y001d;
+enddef;
+*
+def TIANMA65;
+     site_type = fixed;
+     site_name = TIANMA65;
+     site_ID = T6;
+     site_position = -2826708.80810 m :  4679236.97220 m :  3274667.44950 m;
+     site_velocity =  -0.027260 m/yr :  -0.016550 m/yr :  -0.016290 m/yr;
+     site_position_epoch = 2020y001d;
+enddef;
+*
+def TORUN;
+     site_type = fixed;
+     site_name = TORUN;
+     site_ID = Tr;
+     site_position =  3638558.51000 m :  1221969.72000 m :  5077036.76000 m;
+     site_velocity =  -0.016010 m/yr :   0.016450 m/yr :   0.007520 m/yr;
+     site_position_epoch = 1997y001d;
+     horizon_map_az = 0.0 deg : 360.0;
+     horizon_map_el = 2.0 deg : 2.0;
+enddef;
+*
+def URUMQI;
+     site_type = fixed;
+     site_name = URUMQI;
+     site_ID = Ur;
+     site_position =   228309.99220 m :  4631922.89750 m :  4367064.24070 m;
+     site_velocity =  -0.032430 m/yr :  -0.001720 m/yr :   0.005050 m/yr;
+     site_position_epoch = 2020y001d;
+enddef;
+*
+def WSTRBORK;
+     site_type = fixed;
+     site_name = WSTRBORK;
+     site_ID = Wb;
+     site_position =  3828750.69690 m :   442589.21760 m :  5064921.57000 m;
+     site_velocity =  -0.013530 m/yr :   0.017040 m/yr :   0.008730 m/yr;
+     site_position_epoch = 1997y001d;
+enddef;
+*------------------------------------------------------------------------------
+$PROCEDURES;
+*
+def Procedure;
+     procedure_name_prefix =  "01";
+     tape_change =  420 sec;
+     headstack_motion =    6 sec;
+     new_source_command =    5 sec;
+     new_tape_setup =   20 sec;
+     setup_always = on :  20 sec;
+     parity_check = off : 100 sec;
+     tape_prepass = off : 600 sec;
+     preob_cal  = on :  10 sec : preob;
+     midob_cal  = on :  15 sec : midob;
+     postob_cal = on :   0 sec : postob;
+enddef;
+*------------------------------------------------------------------------------
+$SOURCE;
+def J1753+2848;
+     source_name = J1753+2848;
+     ra = 17h53m42.4736450s; dec =  28d48'04.938910"; ref_coord_frame = J2000;
+enddef;
+*------------------------------------------------------------------------------
+$SCHED;
+*
+scan No0001;
+     start = 2026y293d11h00m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     station = Jb : 0 sec : 360 sec :     0.000 GB :  :   &n : 1;
+     station = Wb : 0 sec : 360 sec :     0.000 GB :  :      : 1;
+     station = Ef : 0 sec : 360 sec :     0.000 GB :  : &ccw : 1;
+     station = Mc : 0 sec : 360 sec :     0.000 GB :  : &ccw : 1;
+     station = O8 : 0 sec : 360 sec :     0.000 GB :  :      : 1;
+     station = T6 : 0 sec : 360 sec :     0.000 GB :  :   &n : 1;
+     station = Ur : 0 sec : 360 sec :     0.000 GB :  :   &n : 1;
+     station = Tr : 0 sec : 360 sec :     0.000 GB :  :   &n : 1;
+     station = Hh : 0 sec : 360 sec :     0.000 GB :  :      : 1;
+     station = Ir : 0 sec : 360 sec :     0.000 GB :  : &ccw : 1;
+     station = Cm : 0 sec : 360 sec :     0.000 GB :  :   &n : 1;
+     station = Kn : 0 sec : 360 sec :     0.000 GB :  :   &n : 1;
+     station = Pi : 0 sec : 360 sec :     0.000 GB :  :   &n : 1;
+     station = Da : 0 sec : 360 sec :     0.000 GB :  :   &n : 1;
+     station = De : 0 sec : 360 sec :     0.000 GB :  :   &n : 1;
+endscan;
+*
+scan No0002;
+     start = 2026y293d11h08m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     data_transfer = Jb : disk2file : n26c3_jb_no0002 : 120 sec : 122 sec;
+     station = Jb : 0 sec : 240 sec :   185.500 GB :  :   &n : 1;
+     data_transfer = Wb : disk2file : n26c3_wb_no0002 : 120 sec : 122 sec;
+     station = Wb : 0 sec : 240 sec :    46.375 GB :  :      : 1;
+     data_transfer = Ef : disk2file : n26c3_ef_no0002 : 120 sec : 122 sec;
+     station = Ef : 0 sec : 240 sec :   185.500 GB :  : &ccw : 1;
+     data_transfer = Mc : disk2file : n26c3_mc_no0002 : 120 sec : 122 sec;
+     station = Mc : 0 sec : 240 sec :   185.500 GB :  : &ccw : 1;
+     data_transfer = O8 : disk2file : n26c3_o8_no0002 : 120 sec : 122 sec;
+     station = O8 : 0 sec : 240 sec :   185.500 GB :  :      : 1;
+     data_transfer = T6 : disk2file : n26c3_t6_no0002 : 120 sec : 122 sec;
+     station = T6 : 0 sec : 240 sec :   185.500 GB :  :   &n : 1;
+     data_transfer = Ur : disk2file : n26c3_ur_no0002 : 120 sec : 122 sec;
+     station = Ur : 0 sec : 240 sec :   185.500 GB :  :   &n : 1;
+     data_transfer = Tr : disk2file : n26c3_tr_no0002 : 120 sec : 122 sec;
+     station = Tr : 0 sec : 240 sec :   185.500 GB :  :   &n : 1;
+     data_transfer = Hh : disk2file : n26c3_hh_no0002 : 120 sec : 122 sec;
+     station = Hh : 0 sec : 240 sec :   185.500 GB :  :      : 1;
+     data_transfer = Ir : disk2file : n26c3_ir_no0002 : 120 sec : 122 sec;
+     station = Ir : 0 sec : 240 sec :   185.500 GB :  : &ccw : 1;
+     data_transfer = Cm : disk2file : n26c3_cm_no0002 : 120 sec : 122 sec;
+     station = Cm : 0 sec : 240 sec :    23.187 GB :  :   &n : 1;
+     data_transfer = Kn : disk2file : n26c3_kn_no0002 : 120 sec : 122 sec;
+     station = Kn : 0 sec : 240 sec :    23.187 GB :  :   &n : 1;
+     data_transfer = Pi : disk2file : n26c3_pi_no0002 : 120 sec : 122 sec;
+     station = Pi : 0 sec : 240 sec :    23.187 GB :  :   &n : 1;
+     data_transfer = Da : disk2file : n26c3_da_no0002 : 120 sec : 122 sec;
+     station = Da : 0 sec : 240 sec :    23.187 GB :  :   &n : 1;
+     data_transfer = De : disk2file : n26c3_de_no0002 : 120 sec : 122 sec;
+     station = De : 0 sec : 240 sec :    23.187 GB :  :   &n : 1;
+endscan;
+*
+scan No0003;
+     start = 2026y293d11h17m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     station = Jb : 0 sec : 600 sec :   309.166 GB :  :   &n : 1;
+     station = Wb : 0 sec : 600 sec :    77.292 GB :  :      : 1;
+     station = Ef : 0 sec : 600 sec :   309.166 GB :  : &ccw : 1;
+     station = Mc : 0 sec : 600 sec :   309.166 GB :  : &ccw : 1;
+     station = O8 : 0 sec : 600 sec :   309.166 GB :  :      : 1;
+     station = T6 : 0 sec : 600 sec :   309.166 GB :  :  &cw : 1;
+     station = Ur : 0 sec : 600 sec :   309.166 GB :  :   &n : 1;
+     station = Tr : 0 sec : 600 sec :   309.166 GB :  :   &n : 1;
+     station = Hh : 0 sec : 600 sec :   309.166 GB :  :      : 1;
+     station = Ir : 0 sec : 600 sec :   309.166 GB :  : &ccw : 1;
+     station = Cm : 0 sec : 600 sec :    38.646 GB :  :   &n : 1;
+     station = Kn : 0 sec : 600 sec :    38.646 GB :  :   &n : 1;
+     station = Pi : 0 sec : 600 sec :    38.646 GB :  :   &n : 1;
+     station = Da : 0 sec : 600 sec :    38.646 GB :  :   &n : 1;
+     station = De : 0 sec : 600 sec :    38.646 GB :  :   &n : 1;
+endscan;
+*
+scan No0004;
+     start = 2026y293d11h32m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     data_transfer = Jb : disk2file : n26c3_jb_no0004 : 480 sec : 482 sec;
+     station = Jb : 0 sec : 600 sec :   618.332 GB :  :   &n : 1;
+     data_transfer = Wb : disk2file : n26c3_wb_no0004 : 480 sec : 482 sec;
+     station = Wb : 0 sec : 600 sec :   154.583 GB :  :      : 1;
+     data_transfer = Ef : disk2file : n26c3_ef_no0004 : 480 sec : 482 sec;
+     station = Ef : 0 sec : 600 sec :   618.332 GB :  : &ccw : 1;
+     data_transfer = Mc : disk2file : n26c3_mc_no0004 : 480 sec : 482 sec;
+     station = Mc : 0 sec : 600 sec :   618.332 GB :  :   &n : 1;
+     data_transfer = O8 : disk2file : n26c3_o8_no0004 : 480 sec : 482 sec;
+     station = O8 : 0 sec : 600 sec :   618.332 GB :  :      : 1;
+     data_transfer = T6 : disk2file : n26c3_t6_no0004 : 480 sec : 482 sec;
+     station = T6 : 0 sec : 600 sec :   618.332 GB :  :  &cw : 1;
+     data_transfer = Ur : disk2file : n26c3_ur_no0004 : 480 sec : 482 sec;
+     station = Ur : 0 sec : 600 sec :   618.332 GB :  :   &n : 1;
+     data_transfer = Tr : disk2file : n26c3_tr_no0004 : 480 sec : 482 sec;
+     station = Tr : 0 sec : 600 sec :   618.332 GB :  :   &n : 1;
+     data_transfer = Hh : disk2file : n26c3_hh_no0004 : 480 sec : 482 sec;
+     station = Hh : 0 sec : 600 sec :   618.332 GB :  :      : 1;
+     data_transfer = Ir : disk2file : n26c3_ir_no0004 : 480 sec : 482 sec;
+     station = Ir : 0 sec : 600 sec :   618.332 GB :  : &ccw : 1;
+     data_transfer = Cm : disk2file : n26c3_cm_no0004 : 480 sec : 482 sec;
+     station = Cm : 0 sec : 600 sec :    77.292 GB :  :   &n : 1;
+     data_transfer = Kn : disk2file : n26c3_kn_no0004 : 480 sec : 482 sec;
+     station = Kn : 0 sec : 600 sec :    77.292 GB :  :   &n : 1;
+     data_transfer = Pi : disk2file : n26c3_pi_no0004 : 480 sec : 482 sec;
+     station = Pi : 0 sec : 600 sec :    77.292 GB :  :   &n : 1;
+     data_transfer = Da : disk2file : n26c3_da_no0004 : 480 sec : 482 sec;
+     station = Da : 0 sec : 600 sec :    77.292 GB :  :   &n : 1;
+     data_transfer = De : disk2file : n26c3_de_no0004 : 480 sec : 482 sec;
+     station = De : 0 sec : 600 sec :    77.292 GB :  :   &n : 1;
+endscan;
+*
+scan No0005;
+     start = 2026y293d11h47m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     station = Jb : 0 sec : 600 sec :   927.498 GB :  :   &n : 1;
+     station = Wb : 0 sec : 600 sec :   231.875 GB :  :      : 1;
+     station = Ef : 0 sec : 600 sec :   927.498 GB :  : &ccw : 1;
+     station = Mc : 0 sec : 600 sec :   927.498 GB :  :   &n : 1;
+     station = O8 : 0 sec : 600 sec :   927.498 GB :  :      : 1;
+     station = T6 : 0 sec : 600 sec :   927.498 GB :  :  &cw : 1;
+     station = Ur : 0 sec : 600 sec :   927.498 GB :  :   &n : 1;
+     station = Tr : 0 sec : 600 sec :   927.498 GB :  :   &n : 1;
+     station = Hh : 0 sec : 600 sec :   927.498 GB :  :      : 1;
+     station = Ir : 0 sec : 600 sec :   927.498 GB :  : &ccw : 1;
+     station = Cm : 0 sec : 600 sec :   115.937 GB :  :   &n : 1;
+     station = Kn : 0 sec : 600 sec :   115.937 GB :  :   &n : 1;
+     station = Pi : 0 sec : 600 sec :   115.937 GB :  :   &n : 1;
+     station = Da : 0 sec : 600 sec :   115.937 GB :  :   &n : 1;
+     station = De : 0 sec : 600 sec :   115.937 GB :  :   &n : 1;
+endscan;
+*
+scan No0006;
+     start = 2026y293d12h02m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     data_transfer = Jb : disk2file : n26c3_jb_no0006 : 480 sec : 482 sec;
+     station = Jb : 0 sec : 600 sec :  1236.664 GB :  :   &n : 1;
+     data_transfer = Wb : disk2file : n26c3_wb_no0006 : 480 sec : 482 sec;
+     station = Wb : 0 sec : 600 sec :   309.166 GB :  :      : 1;
+     data_transfer = Ef : disk2file : n26c3_ef_no0006 : 480 sec : 482 sec;
+     station = Ef : 0 sec : 600 sec :  1236.664 GB :  : &ccw : 1;
+     data_transfer = Mc : disk2file : n26c3_mc_no0006 : 480 sec : 482 sec;
+     station = Mc : 0 sec : 600 sec :  1236.664 GB :  :   &n : 1;
+     data_transfer = O8 : disk2file : n26c3_o8_no0006 : 480 sec : 482 sec;
+     station = O8 : 0 sec : 600 sec :  1236.664 GB :  :      : 1;
+     data_transfer = T6 : disk2file : n26c3_t6_no0006 : 480 sec : 482 sec;
+     station = T6 : 0 sec : 600 sec :  1236.664 GB :  :  &cw : 1;
+     data_transfer = Ur : disk2file : n26c3_ur_no0006 : 480 sec : 482 sec;
+     station = Ur : 0 sec : 600 sec :  1236.664 GB :  :   &n : 1;
+     data_transfer = Tr : disk2file : n26c3_tr_no0006 : 480 sec : 482 sec;
+     station = Tr : 0 sec : 600 sec :  1236.664 GB :  :   &n : 1;
+     data_transfer = Hh : disk2file : n26c3_hh_no0006 : 480 sec : 482 sec;
+     station = Hh : 0 sec : 600 sec :  1236.664 GB :  :      : 1;
+     data_transfer = Ir : disk2file : n26c3_ir_no0006 : 480 sec : 482 sec;
+     station = Ir : 0 sec : 600 sec :  1236.664 GB :  : &ccw : 1;
+     data_transfer = Cm : disk2file : n26c3_cm_no0006 : 480 sec : 482 sec;
+     station = Cm : 0 sec : 600 sec :   154.583 GB :  :   &n : 1;
+     data_transfer = Kn : disk2file : n26c3_kn_no0006 : 480 sec : 482 sec;
+     station = Kn : 0 sec : 600 sec :   154.583 GB :  :   &n : 1;
+     data_transfer = Pi : disk2file : n26c3_pi_no0006 : 480 sec : 482 sec;
+     station = Pi : 0 sec : 600 sec :   154.583 GB :  :   &n : 1;
+     data_transfer = Da : disk2file : n26c3_da_no0006 : 480 sec : 482 sec;
+     station = Da : 0 sec : 600 sec :   154.583 GB :  :   &n : 1;
+     data_transfer = De : disk2file : n26c3_de_no0006 : 480 sec : 482 sec;
+     station = De : 0 sec : 600 sec :   154.583 GB :  :   &n : 1;
+endscan;
+*
+scan No0007;
+     start = 2026y293d12h17m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     station = Jb : 0 sec : 600 sec :  1545.830 GB :  :   &n : 1;
+     station = Wb : 0 sec : 600 sec :   386.458 GB :  :      : 1;
+     station = Ef : 0 sec : 600 sec :  1545.830 GB :  : &ccw : 1;
+     station = Mc : 0 sec : 600 sec :  1545.830 GB :  :   &n : 1;
+     station = O8 : 0 sec : 600 sec :  1545.830 GB :  :      : 1;
+     station = T6 : 0 sec : 600 sec :  1545.830 GB :  :  &cw : 1;
+     station = Ur : 0 sec : 600 sec :  1545.830 GB :  :   &n : 1;
+     station = Tr : 0 sec : 600 sec :  1545.830 GB :  :   &n : 1;
+     station = Hh : 0 sec : 600 sec :  1545.830 GB :  :      : 1;
+     station = Ir : 0 sec : 600 sec :  1545.830 GB :  : &ccw : 1;
+     station = Cm : 0 sec : 600 sec :   193.229 GB :  :   &n : 1;
+     station = Kn : 0 sec : 600 sec :   193.229 GB :  :   &n : 1;
+     station = Pi : 0 sec : 600 sec :   193.229 GB :  :   &n : 1;
+     station = Da : 0 sec : 600 sec :   193.229 GB :  :   &n : 1;
+     station = De : 0 sec : 600 sec :   193.229 GB :  :   &n : 1;
+endscan;
+*
+scan No0008;
+     start = 2026y293d12h32m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     data_transfer = Jb : disk2file : n26c3_jb_no0008 : 480 sec : 482 sec;
+     station = Jb : 0 sec : 600 sec :  1854.996 GB :  :   &n : 1;
+     data_transfer = Wb : disk2file : n26c3_wb_no0008 : 480 sec : 482 sec;
+     station = Wb : 0 sec : 600 sec :   463.749 GB :  :      : 1;
+     data_transfer = Ef : disk2file : n26c3_ef_no0008 : 480 sec : 482 sec;
+     station = Ef : 0 sec : 600 sec :  1854.996 GB :  : &ccw : 1;
+     data_transfer = Mc : disk2file : n26c3_mc_no0008 : 480 sec : 482 sec;
+     station = Mc : 0 sec : 600 sec :  1854.996 GB :  :   &n : 1;
+     data_transfer = O8 : disk2file : n26c3_o8_no0008 : 480 sec : 482 sec;
+     station = O8 : 0 sec : 600 sec :  1854.996 GB :  :      : 1;
+     data_transfer = T6 : disk2file : n26c3_t6_no0008 : 480 sec : 482 sec;
+     station = T6 : 0 sec : 600 sec :  1854.996 GB :  :  &cw : 1;
+     data_transfer = Ur : disk2file : n26c3_ur_no0008 : 480 sec : 482 sec;
+     station = Ur : 0 sec : 600 sec :  1854.996 GB :  :   &n : 1;
+     data_transfer = Tr : disk2file : n26c3_tr_no0008 : 480 sec : 482 sec;
+     station = Tr : 0 sec : 600 sec :  1854.996 GB :  :   &n : 1;
+     data_transfer = Hh : disk2file : n26c3_hh_no0008 : 480 sec : 482 sec;
+     station = Hh : 0 sec : 600 sec :  1854.996 GB :  :      : 1;
+     data_transfer = Ir : disk2file : n26c3_ir_no0008 : 480 sec : 482 sec;
+     station = Ir : 0 sec : 600 sec :  1854.996 GB :  : &ccw : 1;
+     data_transfer = Cm : disk2file : n26c3_cm_no0008 : 480 sec : 482 sec;
+     station = Cm : 0 sec : 600 sec :   231.875 GB :  :   &n : 1;
+     data_transfer = Kn : disk2file : n26c3_kn_no0008 : 480 sec : 482 sec;
+     station = Kn : 0 sec : 600 sec :   231.875 GB :  :   &n : 1;
+     data_transfer = Pi : disk2file : n26c3_pi_no0008 : 480 sec : 482 sec;
+     station = Pi : 0 sec : 600 sec :   231.875 GB :  :   &n : 1;
+     data_transfer = Da : disk2file : n26c3_da_no0008 : 480 sec : 482 sec;
+     station = Da : 0 sec : 600 sec :   231.875 GB :  :   &n : 1;
+     data_transfer = De : disk2file : n26c3_de_no0008 : 480 sec : 482 sec;
+     station = De : 0 sec : 600 sec :   231.875 GB :  :   &n : 1;
+endscan;
+*
+scan No0009;
+     start = 2026y293d12h47m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     station = Jb : 0 sec : 600 sec :  2164.162 GB :  :   &n : 1;
+     station = Wb : 0 sec : 600 sec :   541.041 GB :  :      : 1;
+     station = Ef : 0 sec : 600 sec :  2164.162 GB :  : &ccw : 1;
+     station = Mc : 0 sec : 600 sec :  2164.162 GB :  :   &n : 1;
+     station = O8 : 0 sec : 600 sec :  2164.162 GB :  :      : 1;
+     station = T6 : 0 sec : 600 sec :  2164.162 GB :  :  &cw : 1;
+     station = Ur : 0 sec : 600 sec :  2164.162 GB :  :   &n : 1;
+     station = Tr : 0 sec : 600 sec :  2164.162 GB :  :   &n : 1;
+     station = Hh : 0 sec : 600 sec :  2164.162 GB :  :      : 1;
+     station = Ir : 0 sec : 600 sec :  2164.162 GB :  : &ccw : 1;
+     station = Cm : 0 sec : 600 sec :   270.520 GB :  :   &n : 1;
+     station = Kn : 0 sec : 600 sec :   270.520 GB :  :   &n : 1;
+     station = Pi : 0 sec : 600 sec :   270.520 GB :  :   &n : 1;
+     station = Da : 0 sec : 600 sec :   270.520 GB :  :   &n : 1;
+     station = De : 0 sec : 600 sec :   270.520 GB :  :   &n : 1;
+endscan;
+*
+scan No0010;
+     start = 2026y293d13h02m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     data_transfer = Jb : disk2file : n26c3_jb_no0010 : 480 sec : 482 sec;
+     station = Jb : 0 sec : 600 sec :  2473.328 GB :  :   &n : 1;
+     data_transfer = Wb : disk2file : n26c3_wb_no0010 : 480 sec : 482 sec;
+     station = Wb : 0 sec : 600 sec :   618.332 GB :  :      : 1;
+     data_transfer = Ef : disk2file : n26c3_ef_no0010 : 480 sec : 482 sec;
+     station = Ef : 0 sec : 600 sec :  2473.328 GB :  : &ccw : 1;
+     data_transfer = Mc : disk2file : n26c3_mc_no0010 : 480 sec : 482 sec;
+     station = Mc : 0 sec : 600 sec :  2473.328 GB :  :   &n : 1;
+     data_transfer = O8 : disk2file : n26c3_o8_no0010 : 480 sec : 482 sec;
+     station = O8 : 0 sec : 600 sec :  2473.328 GB :  :      : 1;
+     data_transfer = T6 : disk2file : n26c3_t6_no0010 : 480 sec : 482 sec;
+     station = T6 : 0 sec : 600 sec :  2473.328 GB :  :  &cw : 1;
+     data_transfer = Ur : disk2file : n26c3_ur_no0010 : 480 sec : 482 sec;
+     station = Ur : 0 sec : 600 sec :  2473.328 GB :  :   &n : 1;
+     data_transfer = Tr : disk2file : n26c3_tr_no0010 : 480 sec : 482 sec;
+     station = Tr : 0 sec : 600 sec :  2473.328 GB :  :   &n : 1;
+     data_transfer = Hh : disk2file : n26c3_hh_no0010 : 480 sec : 482 sec;
+     station = Hh : 0 sec : 600 sec :  2473.328 GB :  :      : 1;
+     data_transfer = Ir : disk2file : n26c3_ir_no0010 : 480 sec : 482 sec;
+     station = Ir : 0 sec : 600 sec :  2473.328 GB :  : &ccw : 1;
+     data_transfer = Cm : disk2file : n26c3_cm_no0010 : 480 sec : 482 sec;
+     station = Cm : 0 sec : 600 sec :   309.166 GB :  :   &n : 1;
+     data_transfer = Kn : disk2file : n26c3_kn_no0010 : 480 sec : 482 sec;
+     station = Kn : 0 sec : 600 sec :   309.166 GB :  :   &n : 1;
+     data_transfer = Pi : disk2file : n26c3_pi_no0010 : 480 sec : 482 sec;
+     station = Pi : 0 sec : 600 sec :   309.166 GB :  :   &n : 1;
+     data_transfer = Da : disk2file : n26c3_da_no0010 : 480 sec : 482 sec;
+     station = Da : 0 sec : 600 sec :   309.166 GB :  :   &n : 1;
+     data_transfer = De : disk2file : n26c3_de_no0010 : 480 sec : 482 sec;
+     station = De : 0 sec : 600 sec :   309.166 GB :  :   &n : 1;
+endscan;
+*
+scan No0011;
+     start = 2026y293d13h17m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     station = Jb : 0 sec : 600 sec :  2782.494 GB :  :   &n : 1;
+     station = Wb : 0 sec : 600 sec :   695.624 GB :  :      : 1;
+     station = Ef : 0 sec : 600 sec :  2782.494 GB :  : &ccw : 1;
+     station = Mc : 0 sec : 600 sec :  2782.494 GB :  :   &n : 1;
+     station = O8 : 0 sec : 600 sec :  2782.494 GB :  :      : 1;
+     station = T6 : 0 sec : 600 sec :  2782.494 GB :  :  &cw : 1;
+     station = Ur : 0 sec : 600 sec :  2782.494 GB :  :   &n : 1;
+     station = Tr : 0 sec : 600 sec :  2782.494 GB :  :   &n : 1;
+     station = Hh : 0 sec : 600 sec :  2782.494 GB :  :      : 1;
+     station = Ir : 0 sec : 600 sec :  2782.494 GB :  : &ccw : 1;
+     station = Cm : 0 sec : 600 sec :   347.812 GB :  :   &n : 1;
+     station = Kn : 0 sec : 600 sec :   347.812 GB :  :   &n : 1;
+     station = Pi : 0 sec : 600 sec :   347.812 GB :  :   &n : 1;
+     station = Da : 0 sec : 600 sec :   347.812 GB :  :   &n : 1;
+     station = De : 0 sec : 600 sec :   347.812 GB :  :   &n : 1;
+endscan;
+*
+scan No0012;
+     start = 2026y293d13h32m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     data_transfer = Jb : disk2file : n26c3_jb_no0012 : 480 sec : 482 sec;
+     station = Jb : 0 sec : 600 sec :  3091.660 GB :  :   &n : 1;
+     data_transfer = Wb : disk2file : n26c3_wb_no0012 : 480 sec : 482 sec;
+     station = Wb : 0 sec : 600 sec :   772.915 GB :  :      : 1;
+     data_transfer = Ef : disk2file : n26c3_ef_no0012 : 480 sec : 482 sec;
+     station = Ef : 0 sec : 600 sec :  3091.660 GB :  :   &n : 1;
+     data_transfer = Mc : disk2file : n26c3_mc_no0012 : 480 sec : 482 sec;
+     station = Mc : 0 sec : 600 sec :  3091.660 GB :  :   &n : 1;
+     data_transfer = O8 : disk2file : n26c3_o8_no0012 : 480 sec : 482 sec;
+     station = O8 : 0 sec : 600 sec :  3091.660 GB :  :      : 1;
+     data_transfer = T6 : disk2file : n26c3_t6_no0012 : 480 sec : 482 sec;
+     station = T6 : 0 sec : 600 sec :  3091.660 GB :  :  &cw : 1;
+     data_transfer = Ur : disk2file : n26c3_ur_no0012 : 480 sec : 482 sec;
+     station = Ur : 0 sec : 600 sec :  3091.660 GB :  :   &n : 1;
+     data_transfer = Tr : disk2file : n26c3_tr_no0012 : 480 sec : 482 sec;
+     station = Tr : 0 sec : 600 sec :  3091.660 GB :  :   &n : 1;
+     data_transfer = Hh : disk2file : n26c3_hh_no0012 : 480 sec : 482 sec;
+     station = Hh : 0 sec : 600 sec :  3091.660 GB :  :      : 1;
+     data_transfer = Ir : disk2file : n26c3_ir_no0012 : 480 sec : 482 sec;
+     station = Ir : 0 sec : 600 sec :  3091.660 GB :  : &ccw : 1;
+     data_transfer = Cm : disk2file : n26c3_cm_no0012 : 480 sec : 482 sec;
+     station = Cm : 0 sec : 600 sec :   386.458 GB :  :   &n : 1;
+     data_transfer = Kn : disk2file : n26c3_kn_no0012 : 480 sec : 482 sec;
+     station = Kn : 0 sec : 600 sec :   386.458 GB :  :   &n : 1;
+     data_transfer = Pi : disk2file : n26c3_pi_no0012 : 480 sec : 482 sec;
+     station = Pi : 0 sec : 600 sec :   386.458 GB :  :   &n : 1;
+     data_transfer = Da : disk2file : n26c3_da_no0012 : 480 sec : 482 sec;
+     station = Da : 0 sec : 600 sec :   386.458 GB :  :   &n : 1;
+     data_transfer = De : disk2file : n26c3_de_no0012 : 480 sec : 482 sec;
+     station = De : 0 sec : 600 sec :   386.458 GB :  :   &n : 1;
+endscan;
+*
+scan No0013;
+     start = 2026y293d13h47m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     station = Jb : 0 sec : 360 sec :  3400.826 GB :  :   &n : 1;
+     station = Wb : 0 sec : 360 sec :   850.207 GB :  :      : 1;
+     station = Ef : 0 sec : 360 sec :  3400.826 GB :  :   &n : 1;
+     station = Mc : 0 sec : 360 sec :  3400.826 GB :  :   &n : 1;
+     station = O8 : 0 sec : 360 sec :  3400.826 GB :  :      : 1;
+     station = T6 : 0 sec : 360 sec :  3400.826 GB :  :  &cw : 1;
+     station = Ur : 0 sec : 360 sec :  3400.826 GB :  :   &n : 1;
+     station = Tr : 0 sec : 360 sec :  3400.826 GB :  :   &n : 1;
+     station = Hh : 0 sec : 360 sec :  3400.826 GB :  :      : 1;
+     station = Ir : 0 sec : 360 sec :  3400.826 GB :  : &ccw : 1;
+     station = Cm : 0 sec : 360 sec :   425.103 GB :  :   &n : 1;
+     station = Kn : 0 sec : 360 sec :   425.103 GB :  :   &n : 1;
+     station = Pi : 0 sec : 360 sec :   425.103 GB :  :   &n : 1;
+     station = Da : 0 sec : 360 sec :   425.103 GB :  :   &n : 1;
+     station = De : 0 sec : 360 sec :   425.103 GB :  :   &n : 1;
+endscan;
+*
+scan No0014;
+     start = 2026y293d13h54m00s;
+     mode = evn6cm-4Gbps-32MHz;
+     source = J1753+2848;
+     station = Jb : 0 sec : 360 sec :  3586.326 GB :  :   &n : 1;
+     station = Wb : 0 sec : 360 sec :   896.582 GB :  :      : 1;
+     station = Ef : 0 sec : 360 sec :  3586.326 GB :  :   &n : 1;
+     station = Mc : 0 sec : 360 sec :  3586.326 GB :  :   &n : 1;
+     station = O8 : 0 sec : 360 sec :  3586.326 GB :  :      : 1;
+     station = T6 : 0 sec : 360 sec :  3586.326 GB :  :  &cw : 1;
+     station = Ur : 0 sec : 360 sec :  3586.326 GB :  :   &n : 1;
+     station = Tr : 0 sec : 360 sec :  3586.326 GB :  :   &n : 1;
+     station = Hh : 0 sec : 360 sec :  3586.326 GB :  :      : 1;
+     station = Ir : 0 sec : 360 sec :  3586.326 GB :  : &ccw : 1;
+     station = Cm : 0 sec : 360 sec :   448.291 GB :  :   &n : 1;
+     station = Kn : 0 sec : 360 sec :   448.291 GB :  :   &n : 1;
+     station = Pi : 0 sec : 360 sec :   448.291 GB :  :   &n : 1;
+     station = Da : 0 sec : 360 sec :   448.291 GB :  :   &n : 1;
+     station = De : 0 sec : 360 sec :   448.291 GB :  :   &n : 1;
+endscan;

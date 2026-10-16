@@ -1,0 +1,50 @@
+[tool.pytest.ini_options]
+pythonpath = "src"
+
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "pyvexfile"
+version = "2.0.0"
+description = "Parser for .vex files."
+license = "GPL-3.0-or-later"
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["astronomy", "astrophysics", "cosmology", "radio", "science", "observations", "VLBI"]
+
+authors = [
+    { name = "B. Marcote", email = "marcote@jive.eu" }
+]
+
+classifiers = [
+    # "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Programming Language :: Python :: 3 :: Only"
+]
+
+# dependencies = [
+# ]
+
+
+[project.urls]
+"Bug Reports" = "https://github.com/bmarcote/pyvexfile/issues"
+"Source" = "https://github.com/bmarcote/pyvexfile/"
+
+
+# [tool.setuptools]
+# include-package-data = true
+
+# [tool.setuptools.package-data]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+vex = "pyvexfile.cli:main"
+
+
