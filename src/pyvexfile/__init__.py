@@ -5,7 +5,7 @@ Usage
 
 from pyvexfile import Vex
 
-vex = Vex.from_file("experiment.vex")
+vex = Vex("experiment.vex")
 vex["STATION"]["Jb"]["$SITE"]                     # value of 'ref $SITE = ...;'
 vex["FREQ"]["4632MHz32x32MHz"].get_all("chan_def")
 vex["EXPER"]["N26C3"]["exper_name"] = "N26C4"

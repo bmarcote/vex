@@ -517,13 +517,19 @@ class Vex(ObservationMixin, _HasStatements, Node):
     statement and comments) and the blocks, in the order they appear in the file.
 
     It behaves as a dictionary of its blocks, by name (without the '$'):
-        vex = Vex.from_file('experiment.vex')
+        vex = Vex('experiment.vex')
         vex['STATION']['Jb']['$SITE']
         vex.to_file('new.vex')
+
+    Vex(path) reads and parses a VEX file (raising VexSyntaxError if it is not correct),
+    Vex([node, ...]) creates one from the given nodes, and Vex() creates an empty one.
     """
 
-    def __init__(self, children: list[Node] | None = None):
-        self.children: list[Node] = [] if children is None else list(children)
+    def __init__(self, source: "str | os.PathLike | list[Node] | None" = None):
+        if isinstance(source, (str, os.PathLike)):
+            source = Vex.from_file(source).children
+
+        self.children: list[Node] = [] if source is None else list(source)
 
     @classmethod
     def from_string(cls, text: str) -> "Vex":
@@ -534,7 +540,9 @@ class Vex(ObservationMixin, _HasStatements, Node):
 
     @classmethod
     def from_file(cls, path: str | os.PathLike) -> "Vex":
-        """Reads and parses a VEX file. Raises VexSyntaxError if it is not correct."""
+        """Reads and parses a VEX file. Raises VexSyntaxError if it is not correct.
+        Same as Vex(path).
+        """
         # newline='' keeps the original line breaks, so the file can be written back unchanged
         with open(path, newline="") as vexfile:
             return cls.from_string(vexfile.read())

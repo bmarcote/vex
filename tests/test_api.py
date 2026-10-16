@@ -27,6 +27,14 @@ def test_file_round_trip(vexfile: Path, tmp_path: Path):
     assert (tmp_path / "out.vex").read_bytes() == vexfile.read_bytes()
 
 
+def test_constructor_reads_files():
+    path = DATA / "n26c3.vex"
+    assert Vex(path).to_string() == Vex(str(path)).to_string() == Vex.from_file(path).to_string()
+    assert Vex([Statement("VEX_rev", "1.5")]).version == "1.5"
+    with pytest.raises(FileNotFoundError):
+        Vex("does_not_exist.vex")
+
+
 def test_crlf_file_round_trip(tmp_path: Path):
     crlf = (DATA / "n26c3.vex").read_bytes().replace(b"\n", b"\r\n")
     (tmp_path / "in.vex").write_bytes(crlf)

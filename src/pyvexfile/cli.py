@@ -246,7 +246,7 @@ def _parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
-        vex = Vex.from_file(args.vexfile)
+        vex = Vex(args.vexfile)
     except OSError as error:
         print(f"vex: cannot read {args.vexfile}: {error.strerror or error}", file=sys.stderr)
         return 1

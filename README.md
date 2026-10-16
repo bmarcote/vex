@@ -14,7 +14,7 @@ reformatted, so a file can be edited by a program and still read and diff like i
 ```python
 from pyvexfile import Vex
 
-vex = Vex.from_file("n26c3.vex")
+vex = Vex("n26c3.vex")
 vex["EXPER"]["N26C3"]["exper_name"] = "N26C4"
 vex.to_file("n26c4.vex")         # identical to n26c3.vex except for that line
 ```
@@ -177,7 +177,7 @@ an EVN observation included in the repository.
 
 ```python
 >>> from pyvexfile import Vex
->>> vex = Vex.from_file("n26c3.vex")
+>>> vex = Vex("n26c3.vex")
 >>> vex.version
 '1.5'
 >>> text = vex.to_string()
@@ -186,7 +186,7 @@ True
 
 ```
 
-`Vex.from_string(text)` parses text that is already in memory, and `vex.to_file(path)` writes the file.
+`Vex(path)` reads a file (the same as `Vex.from_file(path)`), `Vex.from_string(text)` parses text that is already in memory, and `vex.to_file(path)` writes the file.
 `to_file(path, overwrite=False)` raises `FileExistsError` instead of replacing an existing file. Line
 breaks are kept as they are, so files with Windows (`\r\n`) line breaks are also written back unchanged.
 
@@ -340,7 +340,7 @@ Assigning a value modifies the statement if it exists, or adds it otherwise. `ad
 statement, after the last one with the same key. `del` removes all the statements with that key:
 
 ```python
->>> vex = Vex.from_file("n26c3.vex")
+>>> vex = Vex("n26c3.vex")
 >>> exper = vex["EXPER"]["N26C3"]
 >>> exper["exper_name"] = "N26C4"                       # modifies the existing statement
 >>> exper["contact_name"] = "B. Marcote"                # new statement, added after the last one
@@ -433,7 +433,7 @@ following properties and methods follow these references and return parsed value
 frequencies in MHz), while `[]` always returns the raw text.
 
 ```python
->>> vex = Vex.from_file("n26c3.vex")
+>>> vex = Vex("n26c3.vex")
 >>> vex.experiment
 'N26C3'
 >>> vex.modes
