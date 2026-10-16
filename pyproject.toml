@@ -32,8 +32,8 @@ classifiers = [
 
 
 [project.urls]
-"Bug Reports" = "https://github.com/bmarcote/pyvexfile/issues"
-"Source" = "https://github.com/bmarcote/pyvexfile/"
+"Bug Reports" = "https://github.com/bmarcote/vex/issues"
+"Source" = "https://github.com/bmarcote/vex"
 
 
 # [tool.setuptools]

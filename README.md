@@ -1,5 +1,9 @@
 # pyvexfile
 
+[![PyPI](https://img.shields.io/pypi/v/pyvexfile)](https://pypi.org/project/pyvexfile/)
+[![Python](https://img.shields.io/pypi/pyversions/pyvexfile)](https://pypi.org/project/pyvexfile/)
+[![License](https://img.shields.io/pypi/l/pyvexfile)](https://github.com/bmarcote/vex/blob/master/LICENSE)
+
 **pyvexfile** reads, inspects, modifies, verifies and writes [VEX](https://vlbi.org/vex/) files: the files
 that describe VLBI observations (stations, frequency setups, sources and the schedule of scans).
 
@@ -50,17 +54,18 @@ vex.to_file("n26c4.vex")         # identical to n26c3.vex except for that line
 
 ## Installation
 
-```bash
-pip install git+https://github.com/bmarcote/pyvexfile
-```
-
-or, from a copy of the repository:
+pyvexfile is available on [PyPI](https://pypi.org/project/pyvexfile/):
 
 ```bash
-pip install .
+pip install pyvexfile
 ```
 
-This installs the `pyvexfile` Python package and the `vex` command.
+This installs the `pyvexfile` Python package and the `vex` command. To install the latest development
+version from the [GitHub repository](https://github.com/bmarcote/vex) instead:
+
+```bash
+pip install git+https://github.com/bmarcote/vex
+```
 
 
 ## Command line
@@ -165,7 +170,8 @@ be run as `python -m pyvexfile`.
 
 ## Python API
 
-The examples below use `n26c3.vex`, an EVN observation included in `tests/data/`.
+The examples below use [`n26c3.vex`](https://github.com/bmarcote/vex/blob/master/tests/data/n26c3.vex),
+an EVN observation included in the repository.
 
 ### Reading and writing
 
@@ -577,6 +583,14 @@ in it.
 
 ## Development
 
+The source code is at [github.com/bmarcote/vex](https://github.com/bmarcote/vex). To work on it:
+
+```bash
+git clone https://github.com/bmarcote/vex.git
+cd vex
+pip install -e . pytest
+```
+
 The package is in `src/pyvexfile/`:
 
 | Module | Contents |
@@ -592,7 +606,6 @@ The package is in `src/pyvexfile/`:
 Run the tests with:
 
 ```bash
-pip install -e . pytest
 pytest
 ```
 
@@ -611,6 +624,9 @@ python -m doctest -o ELLIPSIS README.md
   modified.
 - Comment lines right before a `$BLOCK;` line belong to the previous block, so they move with it if
   blocks are reordered.
+
+
+Bug reports and suggestions are welcome in the [issue tracker](https://github.com/bmarcote/vex/issues).
 
 
 ## License
