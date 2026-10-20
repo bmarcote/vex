@@ -96,7 +96,7 @@ def test_trim_to_new_file(capsys, tmp_path: Path):
     original = DATA / "edge_cases.vex"
     before = original.read_bytes()
     new = tmp_path / "trimmed.vex"
-    code, out, _ = run(capsys, str(original), "--trim", str(new))
+    code, out, _ = run(capsys, str(original), "--trim", "-o", str(new))
     assert (code, out) == (0, f"Trimmed VEX file written to {new}\n")
     assert original.read_bytes() == before
     out = new.read_text()
@@ -122,6 +122,23 @@ def test_trim_overwrites_without_new_file(capsys, tmp_path: Path):
 
 def test_trim_keeps_indented_comments():
     assert trim_comments("$EXPER;\n  * indented\ndef X; * after\n") == "$EXPER;\n  * indented\ndef X;\n"
+
+
+def test_trim_second_comment_in_line_comment():
+    text = "* Station   * note\n** Header ** more\n* Title *\n*----*\n* a*b\ndef X; * after\n"
+    assert trim_comments(text) == "* Station\n** Header\n* Title *\n*----*\n* a*b\ndef X;\n"
+
+
+def test_trim_before_vexfile(capsys, tmp_path: Path):
+    vexfile = tmp_path / "copy.vex"
+    vexfile.write_bytes((DATA / "edge_cases.vex").read_bytes())
+    assert run(capsys, "--trim", str(vexfile))[0] == 0
+    assert b"* RCP" not in vexfile.read_bytes()
+
+
+def test_output_requires_trim(capsys, tmp_path: Path):
+    with pytest.raises(SystemExit):
+        main([N26C3, "-o", str(tmp_path / "x.vex")])
 
 
 def test_trim_cannot_be_combined(capsys):

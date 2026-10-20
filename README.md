@@ -72,7 +72,7 @@ pip install git+https://github.com/bmarcote/vex
 
 ```
 vex FILE [--version] [--stations] [--if] [--scans] [--freq] [--verify [--no-freq-overlap]]
-vex FILE --trim [NEWFILE]
+vex FILE --trim [-o NEWFILE]
 ```
 
 Without options, `vex` prints a summary of the observation:
@@ -101,9 +101,10 @@ The options can be combined, and each one adds a section to the output:
 | `--verify` | The problems found in the file (see [Verification](#verification)). The exit status is 1 if there are errors. Add `--no-freq-overlap` to skip the frequency overlap checks. |
 
 `--trim` removes the in-line comments (those written after a statement in the same line), keeping the
-comments at the beginning of a line. The result is written to `NEWFILE` if given
-(`vex n26c3.vex --trim n26c3_trimmed.vex`), otherwise the VEX file is overwritten. It cannot be combined
-with other options.
+comments at the beginning of a line (but not a second comment inside them, as in `* Station   * note`,
+which becomes `* Station`). The result is written to `NEWFILE` if given with `-o`/`--output`
+(`vex n26c3.vex --trim -o n26c3_trimmed.vex`), otherwise the VEX file is overwritten. It cannot be
+combined with other options.
 
 ```
 $ vex n26c3.vex --stations --scans

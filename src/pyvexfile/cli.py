@@ -7,13 +7,14 @@
     vex experiment.vex --freq          frequencies observed by each station, with a plot
     vex experiment.vex --verify        check the file (exit status 1 if it has errors)
     vex experiment.vex --version       VEX version of the file
-    vex experiment.vex --trim [NEW]    remove the comments after the statements, writing the
+    vex experiment.vex --trim [-o NEW] remove the comments after the statements, writing the
                                        result to NEW (or overwriting the file if not given)
 
 Several options can be combined.
 """
 import argparse
 import math
+import re
 import shutil
 import sys
 from collections import Counter
@@ -28,6 +29,9 @@ from .verify import Severity
 
 
 __all__: list[str] = ["main"]
+
+# Whitespace followed by '*', unless only '*' and whitespace follow (a closing decoration)
+_SECOND_COMMENT = re.compile(r"\s+\*(?!\**\s*$)")
 
 # Characters used in the frequency plot, depending on how much of each cell is covered
 _FULL, _PARTIAL, _EMPTY = "█", "▌", " "
@@ -226,18 +230,32 @@ def show_verify(vex: Vex, path: Path, freq_overlap: bool = True) -> tuple[str, b
     return "\n".join(lines), n_errors > 0
 
 
+def _trim_line_comment(comment: str) -> str:
+    """Removes a second comment (whitespace followed by '*') from a comment that starts a line.
+    A closing run of '*' (as in '* Title *') is kept.
+    """
+    start = len(comment) - len(comment.lstrip("*"))
+    match = _SECOND_COMMENT.search(comment, start)
+    return comment if match is None else comment[:match.start()]
+
+
 def trim_comments(text: str) -> str:
     """Returns the text without the comments written after a statement in the same line.
-    The comments at the beginning of a line (only preceded by whitespace) are kept.
+    The comments at the beginning of a line (only preceded by whitespace) are kept, but
+    any further comment inside them (e.g. '* Station   * note') is removed.
     """
     parts: list[str] = []
     in_statement = False  # whether the current line has something other than whitespace
     for token in tokenize(text):
         if token.type is TokenType.NEWLINE:
             in_statement = False
-        elif token.type is TokenType.COMMENT and in_statement:
-            while parts and parts[-1].isspace():
-                parts.pop()
+        elif token.type is TokenType.COMMENT:
+            if in_statement:
+                while parts and parts[-1].isspace():
+                    parts.pop()
+                continue
+
+            parts.append(_trim_line_comment(token.value))
             continue
         elif token.type is not TokenType.WHITESPACE:
             in_statement = True
@@ -263,18 +281,23 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-freq-overlap", dest="freq_overlap", action="store_false",
                         help="with --verify, do not check that each station shares frequencies "
                              "with the other stations in its scans")
-    parser.add_argument("--trim", nargs="?", const="", default=None, metavar="NEWFILE",
+    parser.add_argument("--trim", action="store_true",
                         help="remove the comments written after a statement (comments at the "
-                             "beginning of a line are kept), and write the result to NEWFILE, "
-                             "or overwrite the VEX file if NEWFILE is not given")
+                             "beginning of a line are kept), and overwrite the VEX file "
+                             "(or write the result to the file given with -o)")
+    parser.add_argument("-o", "--output", type=Path, metavar="NEWFILE",
+                        help="with --trim, write the result to NEWFILE instead of overwriting "
+                             "the VEX file")
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _parser()
     args = parser.parse_args(argv)
-    if args.trim is not None and any((args.version, args.verify, args.stations, args.ifs, args.freq, args.scans)):
+    if args.trim and any((args.version, args.verify, args.stations, args.ifs, args.freq, args.scans)):
         parser.error("--trim cannot be combined with other options")
+    if args.output is not None and not args.trim:
+        parser.error("-o/--output can only be used with --trim")
 
     try:
         vex = Vex(args.vexfile)
@@ -285,8 +308,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"{args.vexfile}:{error.line}:{error.col}: syntax error: {error.message}", file=sys.stderr)
         return 1
 
-    if args.trim is not None:
-        target = Path(args.trim) if args.trim else args.vexfile
+    if args.trim:
+        target = args.output or args.vexfile
         try:
             with open(target, "w", newline="") as trimmed:  # newline='' keeps the original line breaks
                 trimmed.write(trim_comments(vex.to_string()))

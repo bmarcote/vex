@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyvexfile"
-version = "2.1"
+version = "2.1.1"
 description = "Parser for .vex files."
 license = "GPL-3.0-or-later"
 readme = "README.md"
