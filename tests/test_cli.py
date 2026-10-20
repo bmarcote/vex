@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from pyvexfile.cli import _ruler, _tick_step, main, show_frequencies
+from pyvexfile.cli import _ruler, _tick_step, main, show_frequencies, trim_comments
 from pyvexfile import Vex
 
 
@@ -90,6 +90,43 @@ def test_verify_only_warnings_exits_with_zero(capsys, tmp_path: Path):
     warned.write_text((DATA / "n26c3.vex").read_text().replace("VEX_rev = 1.5;", "VEX_rev = 9.9;"))
     code, out, _ = run(capsys, str(warned), "--verify")
     assert code == 0 and out.splitlines()[-1] == "0 errors, 1 warning"
+
+
+def test_trim_to_new_file(capsys, tmp_path: Path):
+    original = DATA / "edge_cases.vex"
+    before = original.read_bytes()
+    new = tmp_path / "trimmed.vex"
+    code, out, _ = run(capsys, str(original), "--trim", str(new))
+    assert (code, out) == (0, f"Trimmed VEX file written to {new}\n")
+    assert original.read_bytes() == before
+    out = new.read_text()
+    lines = out.splitlines()
+    assert lines[1] == "* Hand-written file exercising the syntax that a line-based parser gets wrong."
+    assert lines[8] == "     exper_name = EDGE;"
+    assert lines[9] == '     exper_description = "A string with ; and * inside";'
+    assert lines[19] == "     chan_def =  : 4632 MHz : L :   32.00 MHz : &CH01 : &BBC01 : &NoCal;"
+    assert lines[21] == "                   32.00 MHz : &CH02 : &BBC09 : &NoCal;"
+    assert "  Free text; with semicolons * asterisks = equals" in lines
+    assert len(lines) == len((DATA / "edge_cases.vex").read_text().splitlines())
+    assert Vex.from_string(out).to_string() == out
+
+
+def test_trim_overwrites_without_new_file(capsys, tmp_path: Path):
+    vexfile = tmp_path / "copy.vex"
+    vexfile.write_bytes((DATA / "edge_cases.vex").read_bytes().replace(b"\n", b"\r\n"))
+    assert run(capsys, str(vexfile), "--trim")[0] == 0
+    trimmed = vexfile.read_bytes()
+    assert b"* RCP" not in trimmed and b"* Hand-written" in trimmed
+    assert b"&NoCal;\r\n" in trimmed and b"\n" not in trimmed.replace(b"\r\n", b"")
+
+
+def test_trim_keeps_indented_comments():
+    assert trim_comments("$EXPER;\n  * indented\ndef X; * after\n") == "$EXPER;\n  * indented\ndef X;\n"
+
+
+def test_trim_cannot_be_combined(capsys):
+    with pytest.raises(SystemExit):
+        main([N26C3, "--trim", "--scans"])
 
 
 def test_missing_file(capsys, tmp_path: Path):
