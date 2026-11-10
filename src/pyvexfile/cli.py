@@ -300,7 +300,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.error("-o/--output can only be used with --trim")
 
     try:
-        vex = Vex(args.vexfile)
+        vex = Vex(args.vexfile, verify=False)  # --verify reports the problems itself
     except OSError as error:
         print(f"vex: cannot read {args.vexfile}: {error.strerror or error}", file=sys.stderr)
         return 1

@@ -194,6 +194,10 @@ True
 ```
 
 `Vex(path)` reads a file (the same as `Vex.from_file(path)`), `Vex.from_string(text)` parses text that is already in memory, and `vex.to_file(path)` writes the file.
+By default, `Vex(path)` and `Vex.from_file(path)` also [verify](#verification) the file they read: they raise
+`VexVerificationError` if it has errors (all the problems found are in its `issues` attribute), and issue a
+`VexVerificationWarning` for each warning. Pass `verify=False` to only parse the file, e.g. to read one with
+errors in order to fix it.
 `to_file(path, overwrite=False)` raises `FileExistsError` instead of replacing an existing file. Line
 breaks are kept as they are, so files with Windows (`\r\n`) line breaks are also written back unchanged.
 

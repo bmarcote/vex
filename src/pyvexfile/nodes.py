@@ -521,13 +521,15 @@ class Vex(ObservationMixin, _HasStatements, Node):
         vex['STATION']['Jb']['$SITE']
         vex.to_file('new.vex')
 
-    Vex(path) reads and parses a VEX file (raising VexSyntaxError if it is not correct),
+    Vex(path) reads and parses a VEX file (raising VexSyntaxError if it is not correct) and
+    verifies it (raising VexVerificationError if it has errors; see from_file() and verify()),
     Vex([node, ...]) creates one from the given nodes, and Vex() creates an empty one.
     """
 
-    def __init__(self, source: "str | os.PathLike | list[Node] | None" = None):
+    def __init__(self, source: "str | os.PathLike | list[Node] | None" = None, *,
+                 verify: bool = True):
         if isinstance(source, (str, os.PathLike)):
-            source = Vex.from_file(source).children
+            source = Vex.from_file(source, verify=verify).children
 
         self.children: list[Node] = [] if source is None else list(source)
 
@@ -539,13 +541,23 @@ class Vex(ObservationMixin, _HasStatements, Node):
         return parse(text)
 
     @classmethod
-    def from_file(cls, path: str | os.PathLike) -> "Vex":
+    def from_file(cls, path: str | os.PathLike, *, verify: bool = True) -> "Vex":
         """Reads and parses a VEX file. Raises VexSyntaxError if it is not correct.
-        Same as Vex(path).
+        If verify is True (the default), it also checks its content (see verify()): it raises
+        VexVerificationError if there are errors, and issues a VexVerificationWarning for each
+        warning. With verify=False the file is only parsed.
+        Same as Vex(path, verify=verify).
         """
         # newline='' keeps the original line breaks, so the file can be written back unchanged
         with open(path, newline="") as vexfile:
-            return cls.from_string(vexfile.read())
+            vex = cls.from_string(vexfile.read())
+
+        if verify:
+            from .verify import check
+
+            check(vex, path)
+
+        return vex
 
     def to_file(self, path: str | os.PathLike, overwrite: bool = True) -> None:
         """Writes the VEX file. Raises FileExistsError if it exists and overwrite is False."""

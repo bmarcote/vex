@@ -5,7 +5,7 @@ Usage
 
 from pyvexfile import Vex
 
-vex = Vex("experiment.vex")
+vex = Vex("experiment.vex")                       # verify=False to skip the verification
 vex["STATION"]["Jb"]["$SITE"]                     # value of 'ref $SITE = ...;'
 vex["FREQ"]["4632MHz32x32MHz"].get_all("chan_def")
 vex["EXPER"]["N26C3"]["exper_name"] = "N26C4"
@@ -20,12 +20,13 @@ from .lexer import VexSyntaxError
 from .nodes import BlankLine, Block, Comment, Def, Literal, Node, Scan, Statement, Value, Vex
 from .observation import IF, Channel, Station
 from .parser import parse
-from .verify import Issue, Severity
+from .verify import Issue, Severity, VexVerificationError, VexVerificationWarning
 
 
 __all__: list[str] = [
     "Vex", "Block", "Def", "Scan", "Statement", "Comment", "BlankLine", "Literal", "Node",
-    "Value", "Station", "Channel", "IF", "Issue", "Severity", "VexSyntaxError", "parse",
+    "Value", "Station", "Channel", "IF", "Issue", "Severity", "VexSyntaxError",
+    "VexVerificationError", "VexVerificationWarning", "parse",
     "__version__",
 ]
 

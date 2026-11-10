@@ -1,8 +1,10 @@
+import warnings
 from pathlib import Path
 
 import pytest
 
-from pyvexfile import Block, Def, Scan, Statement, Vex, VexSyntaxError
+from pyvexfile import (Block, Def, Scan, Severity, Statement, Vex, VexSyntaxError, VexVerificationError,
+                       VexVerificationWarning)
 
 
 DATA = Path(__file__).parent / "data"
@@ -220,3 +222,27 @@ def test_statement_with_dollar_key_is_a_ref():
     statement = Statement("$IF", ["a", "b"])
     assert statement.ref and statement.key == "IF" and statement.full_key == "$IF"
     assert statement.to_string() == "     ref $IF = a:b;\n"
+
+
+def test_reading_verifies_by_default(tmp_path: Path):
+    bad = (DATA / "n26c3.vex").read_text().replace("ref $SITE = JODRELL2;", "ref $SITE = JODRELL3;", 1)
+    assert "JODRELL3" in bad
+    (tmp_path / "bad.vex").write_text(bad)
+    for read in (Vex, Vex.from_file):
+        with pytest.raises(VexVerificationError) as error:
+            read(tmp_path / "bad.vex")
+
+        assert "JODRELL3" in str(error.value) and "bad.vex" in str(error.value)
+        assert any(issue.severity is Severity.ERROR for issue in error.value.issues)
+        assert read(tmp_path / "bad.vex", verify=False)["STATION"]["Jb"]["$SITE"] == "JODRELL3"
+
+
+def test_reading_warns_about_warnings(tmp_path: Path):
+    text = (DATA / "n26c3.vex").read_text().replace("VEX_rev = 1.5;", "VEX_rev = 9.9;", 1)
+    (tmp_path / "odd.vex").write_text(text)
+    with pytest.warns(VexVerificationWarning, match="unknown VEX version"):
+        Vex(tmp_path / "odd.vex")
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        Vex(tmp_path / "odd.vex", verify=False)

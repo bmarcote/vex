@@ -18,6 +18,10 @@ The parser already guarantees that the syntax of a file is correct. verify() che
 
 Problems are returned as a list of Issues, each one an error (the file is wrong) or
 a warning (the file is unusual and may not be what was intended).
+
+Vex(path) and Vex.from_file(path) verify the file they read unless they are given verify=False:
+they raise VexVerificationError if there are errors, and issue a VexVerificationWarning
+for each warning.
 """
 from collections import defaultdict
 from collections.abc import Callable, Iterator
@@ -25,13 +29,15 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import StrEnum
 from itertools import pairwise
+import os
+import warnings
 
 from .nodes import BlankLine, Block, Comment, Def, Node, Scan, Statement, Vex
 from .observation import covered_ranges, overlap
 from .units import parse_duration, parse_epoch, parse_frequency
 
 
-__all__: list[str] = ["Severity", "Issue", "verify"]
+__all__: list[str] = ["Severity", "Issue", "verify", "VexVerificationError", "VexVerificationWarning"]
 
 
 _VEX15_BLOCKS = frozenset({
@@ -65,6 +71,38 @@ class Issue:
     def __str__(self) -> str:
         location = "" if self.line is None else f"line {self.line}: "
         return f"{location}{self.severity}: {self.message}"
+
+
+class VexVerificationError(ValueError):
+    """Raised when a VEX file read with verification has errors. All the problems found
+    (errors and warnings) are in its 'issues' attribute.
+    """
+
+    def __init__(self, issues: list[Issue], path: "str | os.PathLike | None" = None):
+        self.issues = issues
+        self.path = path
+        errors = [issue for issue in issues if issue.severity is Severity.ERROR]
+        where = "" if path is None else f"{os.fspath(path)}: "
+        details = "\n".join(f"  {issue}" for issue in errors)
+        super().__init__(f"{where}{len(errors)} error{'s' if len(errors) != 1 else ''} "
+                         f"found in the VEX file (use verify=False to read it anyway):\n{details}")
+
+
+class VexVerificationWarning(UserWarning):
+    """Issued for each warning found when a VEX file is read with verification."""
+
+
+def check(vex: Vex, path: "str | os.PathLike | None" = None, *, freq_overlap: bool = True) -> None:
+    """Verifies vex: raises VexVerificationError if there are errors, and issues
+    a VexVerificationWarning for each warning.
+    """
+    issues = verify(vex, freq_overlap=freq_overlap)
+    if any(issue.severity is Severity.ERROR for issue in issues):
+        raise VexVerificationError(issues, path)
+
+    where = "" if path is None else f"{os.fspath(path)}: "
+    for issue in issues:
+        warnings.warn(f"{where}{issue}", VexVerificationWarning, stacklevel=3)
 
 
 def verify(vex: Vex, *, freq_overlap: bool = True) -> list[Issue]:
